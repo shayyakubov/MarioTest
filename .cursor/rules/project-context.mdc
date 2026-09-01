@@ -1,0 +1,32 @@
+---
+description: NumTalk assignment context, priorities, and cut order
+alwaysApply: true
+---
+
+# NumTalk 3D Platformer — Project Context
+
+This is an 8-hour mobile touch platformer prototype (Mario lineage, not a clone). Primitives only. Unity 6 + New Input System + URP.
+
+## Build order (do not reorder)
+
+1. **Movement** — camera-relative run, variable jump, coyote + buffer (named tunables)
+2. **Touch input** — floating left stick, right tap jump, both thumbs simultaneous
+3. **Camera** — third-person follow, damping, lead, no fight mid-jump
+4. **Platforms** — composable Moving / Ice / Crumble on one platform type
+5. **Collision block** — pushable crate, shooter knockback, layer matrix hygiene
+6. **Fail/checkpoint** — 3 lives, respawn, world state restore, game over
+7. **Course** — 60–120s, gaps within published max jump height/distance
+8. **Should** — tuning ScriptableObject, one sudden event, feel juice
+9. **Bonus** — only if above is solid; cut bonus → feel → sudden event → course length
+
+## Hard constraints
+
+- No third-party platformer controllers or asset-store movement kits
+- No Nintendo assets, names, music, or level layouts
+- Collision via **layer matrix**, not tag checks in `OnTriggerEnter`
+- Frame-rate independent; no tunneling at 30/60/120 fps
+- One scene, readable git history, DECISIONS.md with AI disclosure
+
+## Deliverables
+
+README (version, run steps, tuned numbers, layer layout) + DECISIONS.md (3 hardest calls + AI note) + APK/recording.

@@ -1,0 +1,19 @@
+---
+description: Collision hygiene requirements from the assignment brief
+globs: Assets/_Project/**/*.cs
+alwaysApply: false
+---
+
+# Collision & Layers
+
+## Assignment constraints (not yet designed)
+
+- Use layer collision matrix — not tag comparisons inside `OnTriggerEnter`
+- Projectiles must not tunnel; must not hit shooter or other projectiles
+- Crate must not clip through geometry or push player through walls
+- Stomp vs side-hit discrimination must hold at full fall speed and 30 fps
+- Knockback does not cost a life; falls and side hits do
+
+## When design is established
+
+Document the layer layout and collision approach in the relevant folder `AGENTS.md` and in `README.md`. Do not invent layers or collision code until then.

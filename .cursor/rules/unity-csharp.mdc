@@ -1,0 +1,64 @@
+---
+description: C# syntax and Unity coding conventions for this project
+globs: Assets/_Project/**/*.cs
+alwaysApply: false
+---
+
+# Unity C# Conventions
+
+## Naming
+
+- Classes / structs: PascalCase (`PlayerMovement`)
+- Interfaces: `I` prefix (`IStompable`)
+- Public members: PascalCase
+- Private fields: `_camelCase`
+- SerializeField: `[SerializeField] private` — never public fields
+- Locals / params: camelCase
+- Constants: PascalCase
+- Booleans: `is` / `has` / `can` prefix
+- Files: one class per file; filename matches class name
+
+## Formatting
+
+- Allman braces, 4 spaces, explicit access modifiers
+- Early returns over deep nesting; one statement per line
+- `var` OK for obvious locals; explicit types for public APIs
+- `using` order: System → Unity → project namespaces
+
+## Plain C# over MonoBehaviour
+
+Prefer regular C# classes and structs when Unity lifecycle is not required.
+
+**Use plain C# for:**
+- Runtime data and config objects
+- Logic that does not need `Transform`, coroutines, or inspector wiring
+- Services and state owned by a thin MonoBehaviour shell
+
+**Use MonoBehaviour only when you need:**
+- Unity lifecycle (`Awake`, `FixedUpdate`, etc.)
+- Scene/prefab references via inspector
+- Integration with physics, rendering, or input components
+
+Keep MonoBehaviours thin: read input / hold refs / delegate to plain objects.
+
+## Component injection
+
+Use InjectComponent for same-GameObject component refs instead of GetComponent in Awake. The reference is resolved in the editor and serialized — no runtime lookup.
+
+```csharp
+[SerializeField, InjectComponent] private Rigidbody _rigidbody;
+```
+
+Use SerializeField for scene/external refs (camera, prefabs). Reserve GetComponent for dynamic or runtime-only cases.
+
+## Unity patterns
+
+- Cache component refs in `Awake`, not `Update`
+- No `FindObjectOfType` / `GameObject.Find` in hot paths
+- Layer indices via named constants, not magic strings
+- Prefer `Time.deltaTime`-scaled logic; never assume 60 fps
+
+## Design docs
+
+- Do not assume implementation. Check folder-level `AGENTS.md` if present; if absent, the design is not established yet.
+- When a feature design is agreed, add or update that folder's `AGENTS.md` before implementing.

@@ -1,0 +1,118 @@
+# Design Notes
+
+Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS.md` and `README.md`.
+
+---
+
+## Movement model
+
+**Choice:** Dynamic Rigidbody with horizontal acceleration servo — not CharacterController, not kinematic mover.
+
+**Why:**
+- Crate pushing works through physics collisions, not custom sweep/push code
+- Ice and friction via PhysicMaterial affect the player naturally
+- Knockback and external forces compose with player input without a hard speed cap
+- Assignment explicitly notes CharacterController pushing "does not come for free"
+
+**Horizontal approach:**
+- Compute a target horizontal velocity from move direction and max speed
+- Compare against current horizontal velocity (Y stripped)
+- Apply only as much acceleration as needed to close the gap, capped by max acceleration (vector magnitude, not per-axis)
+- Drive horizontal motion through acceleration forces, not by hard-clamping velocity
+
+**Deliberately not done:**
+- Hard-clamping total horizontal velocity — knockback must be able to exceed max speed
+- Per-axis acceleration clamp — diagonals would reach max speed faster than cardinals
+
+**Vertical (planned, not yet built):**
+- Set Y velocity directly on jump for consistent height
+- Custom gravity with separate up/down strength and terminal velocity
+- Variable jump height, coyote time, jump buffer
+- Disable built-in gravity; movement applies gravity manually
+
+---
+
+## Component architecture
+
+| Component | Responsibility |
+|-----------|----------------|
+| PlayerController | MonoBehaviour: receives IPlayerInput, tuning, physics tick, scene refs |
+| IPlayerInput | Interface exposing Move and IsJumpPressed — portable across projects |
+| PlayerInputReader | Plain class: only class that talks to Input System; implements IPlayerInput |
+| PlayerMovement | Plain class: horizontal acceleration servo |
+| GroundDetector | Ground checks, normal, platform velocity (later) |
+| PlayerTuning | Serializable tuning data — edited on PlayerController, consumed by PlayerMovement |
+| GameBootstrap | Composition root: creates reader, wires Initialize, owns input enable/disable |
+
+**Separation principle:** Controller handles intent and Unity lifecycle; PlayerMovement handles physics logic. Controller delegates movement — it does not apply forces directly.
+
+**Plain C# over MonoBehaviour:** PlayerTuning, PlayerMovement, and PlayerInputReader are plain classes. PlayerController is a thin MonoBehaviour for lifecycle and scene refs.
+
+**Input wiring:** GameBootstrap holds the Input Actions asset and PlayerController reference. PlayerController.Initialize receives IPlayerInput — no Input System or bootstrap knowledge. Same-GameObject Rigidbody via GetComponent in Awake.
+
+---
+
+## Tuning
+
+**Choice:** PlayerTuning is a serializable class edited directly on PlayerController in the inspector.
+
+**Why:**
+- Standard Unity pattern for per-prefab tuning — no separate asset required
+- Tuning may eventually be overridden from remote config at runtime by building a new PlayerTuning instance
+- PlayerMovement only reads tuning values; it does not care where they came from
+
+**Current flow:** PlayerController holds serialized tuning. On startup it passes that tuning into PlayerMovement.
+
+**Future flow (remote config):** When remote config arrives, build a new PlayerTuning from fetched values and replace what movement uses.
+
+---
+
+## Input
+
+New Input System. PlayerInputActions asset defines Move and Jump. IPlayerInput interface exposes Move and IsJumpPressed to consumers. PlayerInputReader is the only class referencing Input System types; GameBootstrap creates it and passes it to PlayerController.Initialize.
+
+Keyboard (WASD / arrows) works for editor and desktop testing. Touch virtual stick will call PlayerInputReader.SetTouchMove when implemented.
+
+---
+
+## Rigidbody setup
+
+| Setting | Value |
+|---------|-------|
+| Kinematic | false |
+| Use gravity | false (custom gravity later) |
+| Linear damping | 0 |
+| Angular damping | 0 |
+| Constraints | freeze rotation X and Z |
+| Collision detection | Continuous Dynamic |
+| Interpolation | Interpolate |
+| Collider | Capsule |
+
+Linear damping is zero because movement owns deceleration; drag fights the acceleration servo.
+
+---
+
+## Known deferred risks
+
+1. **Moving platforms** — friction alone won't reliably transfer velocity from kinematic movers; plan explicit platform velocity in GroundDetector / movement.
+2. **Knockback decay** — steering partially acts as decay; assignment asks for named impulse + decay — plan a separate knockback velocity vector in Phase 4.
+3. **Slopes** — camera-relative input must eventually project onto ground normal from GroundDetector.
+4. **Mixed force + direct Y** — only change Y velocity on jump frames; never every frame on horizontal axes.
+
+---
+
+## Phase 1 tuned values (initial)
+
+| Field | Value |
+|-------|-------|
+| maxSpeed | 6 |
+| maxAcceleration | 50 |
+| moveInputDeadzone | 0.1 |
+
+Tune on PlayerController in the inspector (maxSpeed, maxAcceleration, moveInputDeadzone).
+
+---
+
+## Assignment cut order (reminder)
+
+If time runs out, cut in this order: bonus → feel → sudden event → course length. Never cut the collision block.

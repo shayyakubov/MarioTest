@@ -1,0 +1,21 @@
+---
+description: Mobile touch input requirements from the assignment brief
+globs: Assets/_Project/**/*.cs
+alwaysApply: false
+---
+
+# Mobile Touch Input
+
+## Assignment constraints (not yet designed)
+
+- Left region: floating virtual stick (appears at touch point, drag steers)
+- Right region: tap to jump, release early = shorter hop
+- Camera-relative movement with acceleration and deceleration
+- Both thumbs must work simultaneously
+- Coyote time and jump buffer — named, tunable values (numbers TBD)
+- Input System package preferred (already in project)
+- Final validation on device, not keyboard
+
+## When design is established
+
+Document input flow, screen regions, and tuned values in the relevant folder `AGENTS.md`. Do not assume controller APIs or class structure until then.
