@@ -2,91 +2,117 @@
 
 ## Status
 
-Phase 1 complete: horizontal movement only.
+Phase 2 in progress: horizontal movement, ground detection, custom gravity. Jump deferred.
 
 ## Model
 
-Dynamic `Rigidbody` player. Horizontal movement uses an acceleration servo; vertical (jump/gravity) deferred to Phase 3.
+Dynamic `Rigidbody` player. Horizontal movement uses an acceleration servo; vertical uses custom gravity (Y velocity), jump deferred.
 
-### Horizontal formula (Phase 1)
+### Horizontal movement
 
 ```
 targetVelocity = moveDirection * maxSpeed
 currentHorizontal = rigidbody.linearVelocity with Y = 0
 deltaVelocity = targetVelocity - currentHorizontal
 accelerationNeeded = deltaVelocity / fixedDeltaTime
-clamp accelerationNeeded magnitude to maxAcceleration
+clamp acceleration magnitude to max allowed
 AddForce(accelerationNeeded, ForceMode.Acceleration)
 ```
 
-- Do **not** hard-clamp total horizontal velocity (knockback may exceed `maxSpeed`).
+- Do **not** hard-clamp total horizontal velocity (knockback may exceed max speed).
 - Acceleration clamp uses **vector magnitude**, not per-axis.
-- `moveDirection` is camera-relative, normalized; input magnitude applied before normalize (clamped to 1).
+- Move direction is camera-relative, normalized; input magnitude applied before normalize (clamped to 1).
+
+### Gravity
+
+Runs in `ApplyMovement` after ground detection. Sets **Y velocity directly**; horizontal still uses forces.
+
+```
+if grounded and falling: vy = 0
+else if rising: vy += rise gravity * dt
+else: vy += fall gravity * dt
+clamp fall to terminal speed
+```
+
+Grounded stick prevents sinking. Walk off a ledge → airborne → fall accelerates to terminal speed.
 
 ### Rigidbody settings
 
 | Setting | Value |
 |---------|-------|
-| `isKinematic` | false |
-| `useGravity` | false (custom gravity in Phase 3) |
-| `linearDamping` | 0 |
-| `angularDamping` | 0 |
-| `constraints` | freeze rotation X and Z |
-| `collisionDetectionMode` | Continuous Dynamic |
-| `interpolation` | Interpolate |
+| Kinematic | false |
+| Use gravity | false (custom gravity on movement) |
+| Linear / angular damping | 0 |
+| Constraints | freeze rotation X and Z |
+| Collision detection | Continuous Dynamic |
+| Interpolation | Interpolate |
 | Collider | Capsule |
 
 ## Architecture
 
 | Component | Responsibility |
 |-----------|----------------|
-| `PlayerController` | MonoBehaviour: receives `IPlayerInput`, tuning, camera ref; ticks `PlayerMovement` |
-| `IPlayerInput` | Interface: `Move`, `IsJumpPressed` — portable across projects |
-| `PlayerInputReader` | Plain class: only class that talks to Input System; implements `IPlayerInput` |
-| `PlayerMovement` | Plain class: horizontal acceleration servo |
-| `GroundDetector` | Phase 2 — not implemented |
-| `PlayerTuning` | Serializable tuning — edited on `PlayerController`, consumed by `PlayerMovement` |
-| `GameBootstrap` | Composition root: creates reader, calls `PlayerController.Initialize`, owns enable/disable |
+| `PlayerController` | MonoBehaviour: input, tuning, ground detect tick, movement tick |
+| `IPlayerInput` | Portable input interface (`Move`, `IsJumpPressed`) |
+| `PlayerInputReader` | Only class that talks to Input System |
+| `PlayerMovement` | Horizontal acceleration servo + custom gravity |
+| `GroundDetector` | One non-alloc spherecast per fixed step → `IsGrounded`, `GroundNormal` |
+| `PlayerTuning` | Movement tunables — serialized on `PlayerController` |
+| `GroundDetectionSettings` | Ground probe tunables — serialized on `PlayerController` |
+| `GameBootstrap` | Wires input → `PlayerController.Initialize` |
 
-Tune directly on `PlayerController` in the inspector.
+**Wiring:** `GameBootstrap` owns Input Actions asset and reader lifecycle. `PlayerController` has no Input System or bootstrap knowledge. Same-GameObject `Rigidbody` + `CapsuleCollider` via `GetComponent`.
 
-**Wiring:** `GameBootstrap` holds the Input Actions asset and a `PlayerController` reference. On `Awake` it creates `PlayerInputReader` and passes it to `Initialize`. `PlayerController` uses `GetComponent<Rigidbody>()` — no Input System or bootstrap references.
+## Tuning
 
-## Phase 1 tuning (initial)
+**Source of truth:** defaults in `PlayerTuning` and `GroundDetectionSettings` C# classes; live values on `PlayerController` in the test scene. Tune in play mode — do not duplicate numbers here.
 
-Edit tuning on `PlayerController` in the test scene:
+| Asset / class | What it controls |
+|---------------|------------------|
+| `PlayerTuning` | Speed, acceleration, deadzone, rise/fall gravity, terminal fall speed |
+| `GroundDetectionSettings` | Probe distance, skin width, max walkable slope |
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| `maxSpeed` | 6 | Tune in play mode |
-| `maxAcceleration` | 50 | Tune in play mode |
-| `moveInputDeadzone` | 0.1 | |
+Shipped/final numbers go in `README.md` at deliverable time.
 
 ## Input
 
 New Input System via `PlayerInputActions` asset. Only `PlayerInputReader` references Input System types.
 
-- Keyboard: WASD / arrows for Move, Space for Jump (dev and desktop testing)
-- Mobile: touch virtual stick will call `PlayerInputReader.SetTouchMove` (not yet implemented)
-- `PlayerController` reads `IPlayerInput.Move`; camera-relative conversion stays on controller
+- Keyboard: WASD / arrows + Space (dev testing)
+- Mobile: touch stick → `SetTouchMove` (not yet implemented)
+- Jump wired in asset but not consumed by movement yet
 
-Jump action is wired in the input asset but not yet consumed by movement.
+## Ground detection
+
+`GroundDetector.Detect` runs in `FixedUpdate` before movement.
+
+- One `SphereCastNonAlloc` per step, pre-allocated hit buffer
+- Cast from capsule feet downward; Ground layer mask only; triggers ignored
+- Rejects hits steeper than max slope angle
+- `IsGrounded` drives gravity stick; will drive jump/coyote next
+
+All walkable geometry must be on the **Ground** layer (`PhysicsLayers`).
+
+### How to test ground + gravity
+
+1. Open `PlayerMovementTest.unity` (or regenerate via **MarioTest → Create Player Movement Test Scene**).
+2. Enable **Debug Ground** on `PlayerController` — Scene view: green/red = grounded/airborne, blue = ground normal.
+3. Stand on floor → green, no sinking.
+4. Walk off a ledge → red while falling, green on landing.
 
 ## Test scene
 
-`Assets/_Project/Scenes/PlayerMovementTest.unity` — capsule player on a ground plane, angled camera, `GameBootstrap` object wires input.
+`Assets/_Project/Scenes/PlayerMovementTest.unity` — ground plane, elevated platforms, `GameBootstrap` wires input.
 
-Alternative: **MarioTest → Create Player Movement Test Scene** (regenerates scene via editor menu).
+## Deferred
 
-## Deferred (not Phase 1)
-
-- Custom gravity, jump Y velocity, variable height, coyote time, jump buffer
-- `GroundDetector`, slope projection, moving platform velocity transfer
-- Knockback vector + separate decay
-- Ice via `PhysicMaterial`, crate push (physics-only, no special motor code)
+- Jump, variable height, coyote time, jump buffer
+- Slope projection for movement, moving platform velocity transfer
+- Knockback decay vector
+- Ice / crate (physics-only, no special motor code)
 
 ## Known risks
 
-1. **Moving platforms** — friction alone insufficient for kinematic movers; explicit platform velocity transfer needed.
-2. **Mixed force + direct Y** — requires `useGravity = false` and careful jump frame handling.
-3. **Knockback decay** — motor steering partially decays knockback; dedicated decay vector recommended in Phase 4.
+1. **Moving platforms** — need explicit platform velocity transfer, not friction alone.
+2. **Mixed force + direct Y** — only set Y velocity on jump/gravity frames, not horizontal.
+3. **Knockback decay** — motor steering partially decays knockback; dedicated vector recommended later.

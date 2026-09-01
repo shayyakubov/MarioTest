@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using MarioTest.Bootstrap;
+using MarioTest.Core;
 using MarioTest.Player;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -20,6 +21,7 @@ namespace MarioTest.Editor
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
             CreateGround();
+            CreateTestPlatforms();
             Transform cameraTransform = SetupCamera();
             PlayerController playerController = CreatePlayer(cameraTransform);
             CreateBootstrap(playerController);
@@ -33,8 +35,24 @@ namespace MarioTest.Editor
         {
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
             ground.name = "Ground";
+            ground.layer = PhysicsLayers.Ground;
             ground.transform.position = new Vector3(0f, -0.5f, 0f);
             ground.transform.localScale = new Vector3(20f, 1f, 20f);
+        }
+
+        private static void CreateTestPlatforms()
+        {
+            CreateGroundPlatform("Platform_High", new Vector3(6f, 2f, 0f), new Vector3(4f, 0.5f, 4f));
+            CreateGroundPlatform("Platform_Ledge", new Vector3(-5f, 1.5f, 4f), new Vector3(3f, 0.5f, 3f));
+        }
+
+        private static void CreateGroundPlatform(string name, Vector3 position, Vector3 scale)
+        {
+            GameObject platform = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            platform.name = name;
+            platform.layer = PhysicsLayers.Ground;
+            platform.transform.position = position;
+            platform.transform.localScale = scale;
         }
 
         private static Transform SetupCamera()

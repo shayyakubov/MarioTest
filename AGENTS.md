@@ -23,7 +23,8 @@ Do not duplicate rules across both places.
 
 - **This file** — repo-wide process only.
 - **Subfolder `AGENTS.md`** — added **when we establish a feature's design**, not before. One per meaningful area (e.g. a scripts subfolder once movement is designed).
-- Each subfolder doc should capture: what the feature does, key decisions made, tuned values, known edge cases, and what is explicitly out of scope for that feature.
+- Each subfolder doc should capture: what the feature does, key decisions made, known edge cases, and what is explicitly out of scope for that feature.
+- **Tuned numbers** — defaults live in code (`PlayerTuning`, etc.) and scene/prefab; feature `AGENTS.md` describes *what* to tune, not duplicate values. Final shipped numbers go in `README.md`.
 - Do not invent architecture, APIs, or folder layouts that do not exist in the repo yet.
 
 ## Deliverables (for later)

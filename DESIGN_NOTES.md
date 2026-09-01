@@ -24,11 +24,11 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 - Hard-clamping total horizontal velocity — knockback must be able to exceed max speed
 - Per-axis acceleration clamp — diagonals would reach max speed faster than cardinals
 
-**Vertical (planned, not yet built):**
-- Set Y velocity directly on jump for consistent height
-- Custom gravity with separate up/down strength and terminal velocity
-- Variable jump height, coyote time, jump buffer
-- Disable built-in gravity; movement applies gravity manually
+**Vertical (partial):**
+- Custom gravity with separate rise/fall strength and terminal fall speed — implemented
+- Jump: set Y velocity directly on jump frame — not yet built
+- Variable jump height, coyote time, jump buffer — not yet built
+- Disable built-in gravity; movement applies gravity manually — done
 
 ---
 
@@ -40,15 +40,17 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 | IPlayerInput | Interface exposing Move and IsJumpPressed — portable across projects |
 | PlayerInputReader | Plain class: only class that talks to Input System; implements IPlayerInput |
 | PlayerMovement | Plain class: horizontal acceleration servo |
-| GroundDetector | Ground checks, normal, platform velocity (later) |
+| GroundDetector | Plain class: one non-alloc spherecast per fixed step on Ground layer |
 | PlayerTuning | Serializable tuning data — edited on PlayerController, consumed by PlayerMovement |
 | GameBootstrap | Composition root: creates reader, wires Initialize, owns input enable/disable |
 
 **Separation principle:** Controller handles intent and Unity lifecycle; PlayerMovement handles physics logic. Controller delegates movement — it does not apply forces directly.
 
-**Plain C# over MonoBehaviour:** PlayerTuning, PlayerMovement, and PlayerInputReader are plain classes. PlayerController is a thin MonoBehaviour for lifecycle and scene refs.
+**Plain C# over MonoBehaviour:** PlayerTuning, PlayerMovement, PlayerInputReader, and GroundDetector are plain classes. PlayerController is a thin MonoBehaviour for lifecycle and scene refs.
 
-**Input wiring:** GameBootstrap holds the Input Actions asset and PlayerController reference. PlayerController.Initialize receives IPlayerInput — no Input System or bootstrap knowledge. Same-GameObject Rigidbody via GetComponent in Awake.
+**Input wiring:** GameBootstrap holds the Input Actions asset and PlayerController reference. PlayerController.Initialize receives IPlayerInput — no Input System or bootstrap knowledge. Same-GameObject Rigidbody and CapsuleCollider via GetComponent in Awake.
+
+**Layers:** `PhysicsLayers` resolves layers by name from Project Settings (no hardcoded indices). Ground probes use `PhysicsLayers.GroundMask`.
 
 ---
 
@@ -106,10 +108,10 @@ Linear damping is zero because movement owns deceleration; drag fights the accel
 | Field | Value |
 |-------|-------|
 | maxSpeed | 6 |
-| maxAcceleration | 50 |
+| maxAllowedAcceleration | 50 |
 | moveInputDeadzone | 0.1 |
 
-Tune on PlayerController in the inspector (maxSpeed, maxAcceleration, moveInputDeadzone).
+Tune on PlayerController in the inspector (maxSpeed, maxAllowedAcceleration, moveInputDeadzone).
 
 ---
 

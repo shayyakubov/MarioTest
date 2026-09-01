@@ -19,9 +19,28 @@ namespace MarioTest.Player
             _inputMagnitude = magnitude;
         }
 
-        public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime)
+        public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded)
         {
+            ApplyGravity(rigidbody, fixedDeltaTime, isGrounded);
             ApplyHorizontalMovement(rigidbody, fixedDeltaTime);
+        }
+
+        private void ApplyGravity(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded)
+        {
+            Vector3 velocity = rigidbody.linearVelocity;
+
+            if (isGrounded && velocity.y <= 0f)
+            {
+                velocity.y = 0f;
+                rigidbody.linearVelocity = velocity;
+                return;
+            }
+
+            float gravity = velocity.y > 0f ? _tuning.RiseGravity : _tuning.FallGravity;
+            velocity.y += gravity * fixedDeltaTime;
+            velocity.y = Mathf.Max(velocity.y, -_tuning.MaxFallSpeed);
+
+            rigidbody.linearVelocity = velocity;
         }
 
         private void ApplyHorizontalMovement(Rigidbody rigidbody, float fixedDeltaTime)
@@ -39,11 +58,11 @@ namespace MarioTest.Player
             Vector3 deltaVelocity = targetHorizontal - currentHorizontal;
             Vector3 accelerationNeeded = deltaVelocity / fixedDeltaTime;
 
-            float maxAcceleration = _tuning.MaxAcceleration;
+            float maxAllowedAcceleration = _tuning.MaxAllowedAcceleration;
             float accelerationSqr = accelerationNeeded.sqrMagnitude;
-            if (accelerationSqr > maxAcceleration * maxAcceleration)
+            if (accelerationSqr > maxAllowedAcceleration * maxAllowedAcceleration)
             {
-                accelerationNeeded = accelerationNeeded.normalized * maxAcceleration;
+                accelerationNeeded = accelerationNeeded.normalized * maxAllowedAcceleration;
             }
 
             rigidbody.AddForce(accelerationNeeded, ForceMode.Acceleration);

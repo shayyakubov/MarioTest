@@ -3,14 +3,23 @@ using UnityEngine;
 namespace MarioTest.Player
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CapsuleCollider))]
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerTuning _tuning;
+        [SerializeField] private GroundDetectionSettings _groundDetection = new();
         [SerializeField] private Transform _cameraTransform;
 
+        [SerializeField] private bool _debugGround;
+
         private Rigidbody _rigidbody;
+        private CapsuleCollider _capsule;
         private IPlayerInput _input;
         private PlayerMovement _movement;
+        private GroundDetector _groundDetector;
+
+        public bool IsGrounded => _groundDetector != null && _groundDetector.IsGrounded;
+        public Vector3 GroundNormal => _groundDetector != null ? _groundDetector.GroundNormal : Vector3.up;
 
         public void Initialize(IPlayerInput input)
         {
@@ -21,6 +30,8 @@ namespace MarioTest.Player
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _capsule = GetComponent<CapsuleCollider>();
+            _groundDetector = new GroundDetector(_capsule, _groundDetection);
         }
 
         private void Update()
@@ -40,7 +51,22 @@ namespace MarioTest.Player
 
         private void FixedUpdate()
         {
-            _movement.ApplyMovement(_rigidbody, Time.fixedDeltaTime);
+            _groundDetector.Detect(_rigidbody.position, _rigidbody.rotation);
+            _movement.ApplyMovement(_rigidbody, Time.fixedDeltaTime, _groundDetector.IsGrounded);
+            DrawGroundDebug();
+        }
+
+        private void DrawGroundDebug()
+        {
+            if (!_debugGround)
+            {
+                return;
+            }
+
+            Color color = _groundDetector.IsGrounded ? Color.green : Color.red;
+            Vector3 origin = _rigidbody.position;
+            Debug.DrawLine(origin, origin + Vector3.down * 2f, color, Time.fixedDeltaTime, false);
+            Debug.DrawRay(origin, _groundDetector.GroundNormal, Color.blue, Time.fixedDeltaTime, false);
         }
 
         private Vector3 GetCameraRelativeDirection(Vector2 input)
