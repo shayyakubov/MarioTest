@@ -25,14 +25,14 @@ Do not duplicate rules across both places.
 - **This file** — repo-wide process only.
 - **Subfolder `AGENTS.md`** — lean agent context per code area: status, architecture, key decisions, links to docs. Not the full feature write-up.
 - **`docs/features/`** — fuller feature descriptions (behavior, formulas, test plans). One file per feature when non-trivial. Index: `docs/README.md`.
-- Each `AGENTS.md` should capture: what the feature does, key decisions, known edge cases, out of scope — **briefly**, with pointers to `docs/features/` for depth.
+- Each `AGENTS.md` must **link to `docs/features/`** when a feature doc exists; do not duplicate long-form design in `AGENTS.md`.
 - **Tuned numbers** — defaults live in code (`PlayerTuning`, etc.) and scene/prefab; feature `AGENTS.md` describes *what* to tune, not duplicate values. Final shipped numbers go in `README.md`.
 - Do not invent architecture, APIs, or folder layouts that do not exist in the repo yet.
 
 ## Deliverables (for later)
 
 - `README.md` — version, how to run, tuned numbers, layer layout
-- `DECISIONS.md` — three hardest technical calls + AI disclosure
+- `DECISIONS.md` — hard problems log (root cause + solution); top three + AI disclosure for submission
 - `DESIGN_NOTES.md` — working architecture notes to pull from when writing deliverables
 
 These are written as features ship, not upfront.

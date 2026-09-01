@@ -12,6 +12,7 @@ namespace MarioTest.Player
         public bool IsGrounded { get; private set; }
         public Vector3 GroundNormal { get; private set; } = Vector3.up;
         public float GroundDistance { get; private set; }
+        public int GroundLayer { get; private set; } = -1;
 
         public GroundDetector(CapsuleCollider capsule, GroundDetectionSettings settings)
         {
@@ -32,17 +33,28 @@ namespace MarioTest.Player
                 PhysicsLayers.GroundMask,
                 QueryTriggerInteraction.Ignore);
 
-            if (hitCount > 0 && _hits[0].normal.y >= _settings.MinGroundNormalY)
+            if (hitCount > 0
+                && _hits[0].normal.y >= _settings.MinGroundNormalY
+                && IsHitUnderFeet(cast.BottomCenter, cast.Radius, _hits[0].point))
             {
                 IsGrounded = true;
                 GroundNormal = _hits[0].normal;
                 GroundDistance = _hits[0].distance;
+                GroundLayer = _hits[0].collider.gameObject.layer;
                 return;
             }
 
             IsGrounded = false;
             GroundNormal = Vector3.up;
             GroundDistance = float.PositiveInfinity;
+            GroundLayer = -1;
+        }
+
+        private static bool IsHitUnderFeet(Vector3 bottomCenter, float radius, Vector3 hitPoint)
+        {
+            Vector3 horizontalOffset = hitPoint - bottomCenter;
+            horizontalOffset.y = 0f;
+            return horizontalOffset.sqrMagnitude <= radius * radius;
         }
 
         private GroundCast BuildCast(Vector3 position, Quaternion rotation)
@@ -60,6 +72,7 @@ namespace MarioTest.Player
 
             float skin = _settings.SkinWidth;
             return new GroundCast(
+                bottomCenter,
                 bottomCenter + up * skin,
                 radius,
                 -up,
@@ -89,14 +102,16 @@ namespace MarioTest.Player
 
         private readonly struct GroundCast
         {
-            public GroundCast(Vector3 origin, float radius, Vector3 direction, float distance)
+            public GroundCast(Vector3 bottomCenter, Vector3 origin, float radius, Vector3 direction, float distance)
             {
+                BottomCenter = bottomCenter;
                 Origin = origin;
                 Radius = radius;
                 Direction = direction;
                 Distance = distance;
             }
 
+            public Vector3 BottomCenter { get; }
             public Vector3 Origin { get; }
             public float Radius { get; }
             public Vector3 Direction { get; }

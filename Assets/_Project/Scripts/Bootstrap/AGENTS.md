@@ -1,5 +1,7 @@
 # Bootstrap
 
+Agent summary. Input/player wiring is covered in [docs/features/player-movement.md](../../../../docs/features/player-movement.md) (architecture section). No bootstrap-specific feature doc yet.
+
 ## Status
 
 In use for input composition.

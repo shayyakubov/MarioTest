@@ -1,6 +1,8 @@
 # Design Notes
 
-Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS.md` and `README.md`.
+Working notes for the NumTalk assignment. Pull from here when writing [DECISIONS.md](DECISIONS.md) and `README.md`.
+
+Hard problems with solutions are logged in **[DECISIONS.md](DECISIONS.md)** — add new entries there as they come up.
 
 ---
 
@@ -10,15 +12,16 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 
 **Why:**
 - Crate pushing works through physics collisions, not custom sweep/push code
-- Ice and friction via PhysicMaterial affect the player naturally
+- Player capsule uses **zero friction** — no wall stick; run/brake owned by motor, not PhysicMaterial
+- Ice / surfaces later: scale `horizontalAccelerationMultiplier` from ground hit, not friction
 - Knockback and external forces compose with player input without a hard speed cap
 - Assignment explicitly notes CharacterController pushing "does not come for free"
 
 **Horizontal approach:**
 - Compute a target horizontal velocity from move direction and max speed
 - Compare against current horizontal velocity (Y stripped)
-- Apply only as much acceleration as needed to close the gap, capped by max acceleration (vector magnitude, not per-axis)
-- Drive horizontal motion through acceleration forces, not by hard-clamping velocity
+- `MoveTowards` current → target, capped by max acceleration × surface multiplier × dt
+- Set `velocity.x/z` directly — same servo math as before, without `AddForce`
 
 **Deliberately not done:**
 - Hard-clamping total horizontal velocity — knockback must be able to exceed max speed
@@ -26,8 +29,7 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 
 **Vertical (partial):**
 - Custom gravity with separate rise/fall strength and terminal fall speed — implemented
-- Jump design documented in `docs/features/player-jump.md` — not implemented yet
-- Variable jump height, coyote time, jump buffer — specified there; coyote/buffer on player side, not GroundDetector
+- Jump with variable height, coyote time, jump buffer — implemented (see docs/features/player-jump.md)
 - Disable built-in gravity; movement applies gravity manually — done
 
 ---
@@ -37,7 +39,7 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 | Component | Responsibility |
 |-----------|----------------|
 | PlayerController | MonoBehaviour: receives IPlayerInput, tuning, physics tick, scene refs |
-| IPlayerInput | Interface exposing Move and IsJumpPressed — portable across projects |
+| IPlayerInput | Interface: Move, JumpHeld, JumpPressedThisFrame |
 | PlayerInputReader | Plain class: only class that talks to Input System; implements IPlayerInput |
 | PlayerMovement | Plain class: horizontal acceleration servo |
 | GroundDetector | Plain class: one non-alloc spherecast per fixed step on Ground layer |
@@ -71,7 +73,7 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 
 ## Input
 
-New Input System. PlayerInputActions asset defines Move and Jump. IPlayerInput interface exposes Move and IsJumpPressed to consumers. PlayerInputReader is the only class referencing Input System types; GameBootstrap creates it and passes it to PlayerController.Initialize.
+New Input System. PlayerInputActions asset defines Move and Jump. IPlayerInput exposes Move, JumpHeld, and JumpPressedThisFrame.
 
 Keyboard (WASD / arrows) works for editor and desktop testing. Touch virtual stick will call PlayerInputReader.SetTouchMove when implemented.
 

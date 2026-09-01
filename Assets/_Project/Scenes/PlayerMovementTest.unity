@@ -556,10 +556,22 @@ MonoBehaviour:
     _riseGravity: -25
     _fallGravity: -40
     _maxFallSpeed: 20
+    _jumpVelocity: 12.5
+    _coyoteTime: 0.12
+    _jumpBuffer: 0.12
+    _lowJumpGravity: -80
   _groundDetection:
     _checkDistance: 0.1
     _skinWidth: 0.02
     _maxSlopeAngle: 45
+  _movementSettings:
+    _airborneAccelerationMultiplier: 1
+    _defaultGroundAccelerationMultiplier: 1
+    _layerAccelerations:
+    - _layerMask:
+        serializedVersion: 2
+        m_Bits: 64
+      _accelerationMultiplier: 1
   _cameraTransform: {fileID: 2047515575}
   _debugGround: 0
 --- !u!54 &1609508633
@@ -645,7 +657,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1609508631}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 382707c62b4d419e8def5a5b0e1d93c6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

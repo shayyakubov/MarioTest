@@ -2,8 +2,10 @@
 
 Variable-height jump with coyote time and jump buffer. Completes assignment build order **#1 Movement** (with [player-movement.md](player-movement.md)).
 
-**Status:** Designed — not implemented  
-**Code:** `Assets/_Project/Scripts/Player/` (when built)
+**Status:** Implemented  
+**Code:** `Assets/_Project/Scripts/Player/`
+
+**Variable height:** while rising, use `lowJumpGravity` when jump not held; `riseGravity` when held.
 
 ---
 
@@ -91,7 +93,7 @@ Only set Y velocity on jump frames — horizontal stays force-based.
 
 ### Variable height
 
-While rising and jump not held: apply cut (e.g. stronger rise gravity or velocity multiplier). Pick one approach at implementation; tune with named field.
+While rising: `riseGravity` when jump held, `lowJumpGravity` when released (more negative = shorter hop).
 
 ### `ApplyMovement` order (per fixed step)
 
@@ -115,7 +117,19 @@ Document exact jump-vs-gravity order when implementing (jump set before gravity 
 | Jump buffer | Early press memory |
 | Variable-height helper | e.g. jump cut gravity or release multiplier |
 
-Defaults in code — not duplicated here.
+Defaults in `PlayerTuning.cs` — not duplicated here.
+
+---
+
+## Measurement (for course / README)
+
+Record after tuning feels good:
+
+1. **Max jump height** — stand still, full-hold jump, note peak Y delta
+2. **Max jump distance** — run at max speed off ledge, jump on takeoff, measure horizontal travel to landing
+3. **Coyote distance** — same but jump at end of coyote window
+
+Final numbers go in `README.md` at deliverable time.
 
 ---
 

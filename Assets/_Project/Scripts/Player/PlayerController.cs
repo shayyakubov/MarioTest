@@ -7,6 +7,7 @@ namespace MarioTest.Player
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerTuning _tuning;
+        [SerializeField] private PlayerMovementSettings _movementSettings = new();
         [SerializeField] private GroundDetectionSettings _groundDetection = new();
         [SerializeField] private Transform _cameraTransform;
 
@@ -24,7 +25,7 @@ namespace MarioTest.Player
         public void Initialize(IPlayerInput input)
         {
             _input = input;
-            _movement = new PlayerMovement(_tuning);
+            _movement = new PlayerMovement(_tuning, _movementSettings);
         }
 
         private void Awake()
@@ -36,6 +37,8 @@ namespace MarioTest.Player
 
         private void Update()
         {
+            _movement.SetJumpInput(_input.JumpPressedThisFrame, _input.JumpHeld);
+
             Vector2 input = _input.Move;
             Vector3 worldDirection = GetCameraRelativeDirection(input);
 
@@ -52,7 +55,11 @@ namespace MarioTest.Player
         private void FixedUpdate()
         {
             _groundDetector.Detect(_rigidbody.position, _rigidbody.rotation);
-            _movement.ApplyMovement(_rigidbody, Time.fixedDeltaTime, _groundDetector.IsGrounded);
+            _movement.ApplyMovement(
+                _rigidbody,
+                Time.fixedDeltaTime,
+                _groundDetector.IsGrounded,
+                _groundDetector.GroundLayer);
             DrawGroundDebug();
         }
 

@@ -15,6 +15,8 @@ namespace MarioTest.Editor
         private const string ScenePath = "Assets/_Project/Scenes/PlayerMovementTest.unity";
         private const string InputActionsPath = "Assets/_Project/Input/PlayerInputActions.inputactions";
 
+        private const string PlayerPhysicsMaterialPath = "Assets/_Project/Physics/PlayerZeroFriction.physicMaterial";
+
         [MenuItem("MarioTest/Create Player Movement Test Scene")]
         public static void CreateScene()
         {
@@ -87,8 +89,31 @@ namespace MarioTest.Editor
 
             PlayerController controller = player.AddComponent<PlayerController>();
 
+            PhysicsMaterial playerPhysicsMaterial = AssetDatabase.LoadAssetAtPath<PhysicsMaterial>(PlayerPhysicsMaterialPath);
+            if (playerPhysicsMaterial != null)
+            {
+                player.GetComponent<CapsuleCollider>().material = playerPhysicsMaterial;
+            }
+            else
+            {
+                Debug.LogWarning($"Missing physics material at {PlayerPhysicsMaterialPath}");
+            }
+
             SerializedObject controllerSerialized = new SerializedObject(controller);
             controllerSerialized.FindProperty("_cameraTransform").objectReferenceValue = cameraTransform;
+
+            SerializedProperty layerAccelerations = controllerSerialized
+                .FindProperty("_movementSettings")
+                .FindPropertyRelative("_layerAccelerations");
+            if (layerAccelerations.arraySize == 0)
+            {
+                layerAccelerations.arraySize = 1;
+            }
+
+            layerAccelerations.GetArrayElementAtIndex(0)
+                .FindPropertyRelative("_layerMask")
+                .intValue = PhysicsLayers.GroundMask.value;
+
             controllerSerialized.ApplyModifiedPropertiesWithoutUndo();
 
             return controller;

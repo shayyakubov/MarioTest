@@ -10,6 +10,7 @@ Human-readable feature descriptions. Kept separate from `AGENTS.md` so agent con
 | **`AGENTS.md`** (per code folder) | Agents | Status, architecture, key decisions, links to docs |
 | **`.cursor/rules/`** | Agents | Assignment constraints, coding standards — not feature design |
 | **`DESIGN_NOTES.md`** | Deliverable prep | Cross-cutting notes for README / DECISIONS |
+| **`DECISIONS.md`** (repo root) | Reviewers + future you | Hard problems, root causes, solutions; top 3 + AI note for submission |
 | **`README.md`** | Players / reviewers | How to run, final tuned numbers (when shipped) |
 
 ## Conventions
@@ -24,4 +25,4 @@ Human-readable feature descriptions. Kept separate from `AGENTS.md` so agent con
 | Feature | Status | Doc |
 |---------|--------|-----|
 | Player movement (horizontal, gravity, ground) | Implemented | [player-movement.md](features/player-movement.md) |
-| Player jump (variable, coyote, buffer) | Designed, not implemented | [player-jump.md](features/player-jump.md) |
+| Player jump (variable, coyote, buffer) | Implemented | [player-jump.md](features/player-jump.md) |

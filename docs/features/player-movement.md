@@ -9,17 +9,16 @@ Horizontal run, custom gravity, and ground detection. Part of assignment build o
 
 ## Horizontal movement
 
-Acceleration servo toward camera-relative target velocity. Horizontal force only — no hard speed cap (knockback can exceed max run speed).
+Acceleration servo toward camera-relative target velocity. Motor integrates horizontal velocity directly each step — no `AddForce`, no hard speed cap (knockback can exceed max run speed).
 
 ```
 targetVelocity = moveDirection * maxSpeed
 currentHorizontal = velocity with Y = 0
-accelerationNeeded = (target - current) / dt
-clamp acceleration magnitude to max allowed
-AddForce(accelerationNeeded)
+newHorizontal = MoveTowards(current, target, maxAcceleration * surfaceMultiplier * dt)
+set velocity.x/z = newHorizontal
 ```
 
-Tunables: `PlayerTuning` (speed, acceleration, deadzone).
+Tunables: `PlayerTuning` (speed, acceleration, deadzone). Surface accel: `PlayerMovementSettings` layer map on `PlayerController`.
 
 ---
 

@@ -12,6 +12,10 @@ namespace MarioTest.Player
         [SerializeField] private float _riseGravity = -25f;
         [SerializeField] private float _fallGravity = -40f;
         [SerializeField] private float _maxFallSpeed = 20f;
+        [SerializeField] private float _jumpVelocity = 12.5f;
+        [SerializeField] private float _coyoteTime = 0.12f;
+        [SerializeField] private float _jumpBuffer = 0.12f;
+        [SerializeField] private float _lowJumpGravity = -80f;
 
         public float MaxSpeed => _maxSpeed;
         public float MaxAllowedAcceleration => _maxAllowedAcceleration;
@@ -19,6 +23,10 @@ namespace MarioTest.Player
         public float RiseGravity => _riseGravity;
         public float FallGravity => _fallGravity;
         public float MaxFallSpeed => _maxFallSpeed;
+        public float JumpVelocity => _jumpVelocity;
+        public float CoyoteTime => _coyoteTime;
+        public float JumpBuffer => _jumpBuffer;
+        public float LowJumpGravity => _lowJumpGravity;
 
         public PlayerTuning()
         {
@@ -30,7 +38,11 @@ namespace MarioTest.Player
             float moveInputDeadzone,
             float riseGravity = -25f,
             float fallGravity = -40f,
-            float maxFallSpeed = 20f)
+            float maxFallSpeed = 20f,
+            float jumpVelocity = 12.5f,
+            float coyoteTime = 0.12f,
+            float jumpBuffer = 0.12f,
+            float lowJumpGravity = -80f)
         {
             _maxSpeed = maxSpeed;
             _maxAllowedAcceleration = maxAllowedAcceleration;
@@ -38,6 +50,10 @@ namespace MarioTest.Player
             _riseGravity = riseGravity;
             _fallGravity = fallGravity;
             _maxFallSpeed = maxFallSpeed;
+            _jumpVelocity = jumpVelocity;
+            _coyoteTime = coyoteTime;
+            _jumpBuffer = jumpBuffer;
+            _lowJumpGravity = lowJumpGravity;
         }
     }
 }

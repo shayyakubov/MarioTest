@@ -30,7 +30,9 @@ namespace MarioTest.Player
             }
         }
 
-        public bool IsJumpPressed => _jumpAction.IsPressed();
+        public bool JumpHeld => _jumpAction.IsPressed();
+
+        public bool JumpPressedThisFrame => _jumpAction.WasPressedThisFrame();
 
         public void Enable()
         {
