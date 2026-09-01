@@ -1,3 +1,4 @@
+using MarioTest.Platforms;
 using UnityEngine;
 
 namespace MarioTest.Player
@@ -13,6 +14,9 @@ namespace MarioTest.Player
         private float _coyoteTimeRemaining;
         private float _jumpBufferRemaining;
         private bool _wasGrounded;
+        private Vector3 _surfaceVelocity;
+        private Collider _surfaceCollider;
+        private Vector3 _knockbackVelocity;
 
         public PlayerMovement(PlayerTuning tuning, PlayerMovementSettings movementSettings)
         {
@@ -37,41 +41,91 @@ namespace MarioTest.Player
             }
         }
 
-        public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded, int groundLayer)
+        public void ApplyKnockback(Vector3 velocity)
         {
-            float accelerationMultiplier = _movementSettings.GetAccelerationMultiplier(isGrounded, groundLayer);
+            velocity.y = 0f;
+            _knockbackVelocity += velocity;
+        }
+
+        public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded, Collider groundCollider)
+        {
+            if (!isGrounded)
+            {
+                rigidbody.WakeUp();
+            }
+
+            UpdateSurfaceVelocity(isGrounded, groundCollider);
+            ApplyHorizontalMovement(rigidbody, fixedDeltaTime, isGrounded, groundCollider);
 
             Vector3 velocity = rigidbody.linearVelocity;
-            float verticalVelocity = TryExecuteJump(velocity.y, isGrounded, fixedDeltaTime);
-            velocity.y = verticalVelocity;
+            TryExecuteJump(ref velocity.y, isGrounded, fixedDeltaTime);
             rigidbody.linearVelocity = velocity;
 
             ApplyGravity(rigidbody, fixedDeltaTime, isGrounded);
-            ApplyHorizontalMovement(rigidbody, fixedDeltaTime, accelerationMultiplier);
+            DecayKnockback(fixedDeltaTime);
 
             _jumpPressedLatched = false;
             _wasGrounded = isGrounded;
         }
 
-        private float TryExecuteJump(float verticalVelocity, bool isGrounded, float fixedDeltaTime)
+        private void UpdateSurfaceVelocity(bool isGrounded, Collider groundCollider)
+        {
+            if (!isGrounded)
+            {
+                _surfaceCollider = null;
+                return;
+            }
+
+            if (groundCollider != _surfaceCollider)
+            {
+                _surfaceCollider = groundCollider;
+                _surfaceVelocity = Vector3.zero;
+            }
+
+            if (TryGetSurfaceHorizontal(groundCollider, out Vector3 surfaceHorizontal))
+            {
+                _surfaceVelocity = surfaceHorizontal;
+            }
+        }
+
+        private static bool TryGetSurfaceHorizontal(Collider groundCollider, out Vector3 surfaceHorizontal)
+        {
+            if (groundCollider.TryGetComponent(out IMovingSurface movingSurface))
+            {
+                surfaceHorizontal = new Vector3(movingSurface.Velocity.x, 0f, movingSurface.Velocity.z);
+                return true;
+            }
+
+            movingSurface = groundCollider.GetComponentInParent<IMovingSurface>();
+            if (movingSurface != null)
+            {
+                surfaceHorizontal = new Vector3(movingSurface.Velocity.x, 0f, movingSurface.Velocity.z);
+                return true;
+            }
+
+            surfaceHorizontal = Vector3.zero;
+            return false;
+        }
+
+        private void TryExecuteJump(ref float verticalVelocity, bool isGrounded, float fixedDeltaTime)
         {
             UpdateJumpTimers(verticalVelocity, isGrounded, fixedDeltaTime);
 
             bool jumpRequested = _jumpPressedLatched || _jumpBufferRemaining > 0f;
             if (!jumpRequested)
             {
-                return verticalVelocity;
+                return;
             }
 
             bool canJump = isGrounded || (_coyoteTimeRemaining > 0f && verticalVelocity <= 0f);
             if (!canJump)
             {
-                return verticalVelocity;
+                return;
             }
 
             _coyoteTimeRemaining = 0f;
             _jumpBufferRemaining = 0f;
-            return _tuning.JumpVelocity;
+            verticalVelocity = _tuning.JumpVelocity;
         }
 
         private void UpdateJumpTimers(float verticalVelocity, bool isGrounded, float fixedDeltaTime)
@@ -109,26 +163,75 @@ namespace MarioTest.Player
             velocity.y += gravity * fixedDeltaTime;
             velocity.y = Mathf.Max(velocity.y, -_tuning.MaxFallSpeed);
 
+            // Ledge/corner contact can zero vy while our ground probe says airborne — keep falling.
+            if (velocity.y <= 0f)
+            {
+                velocity.y = Mathf.Min(velocity.y, -_tuning.MaxFallSpeed * 0.2f);
+            }
+
             rigidbody.linearVelocity = velocity;
         }
 
-        private void ApplyHorizontalMovement(Rigidbody rigidbody, float fixedDeltaTime, float accelerationMultiplier)
+        private void ApplyHorizontalMovement(
+            Rigidbody rigidbody,
+            float fixedDeltaTime,
+            bool isGrounded,
+            Collider groundCollider)
         {
-            if (_inputMagnitude > _tuning.MoveInputDeadzone)
+            if (_inputMagnitude > _tuning.MoveInputDeadzone || _surfaceVelocity.sqrMagnitude > 0.0001f)
             {
                 rigidbody.WakeUp();
             }
 
+            float accelerationMultiplier = 1f;
+
+            if (isGrounded && groundCollider != null
+                && groundCollider.TryGetComponent(out IMovementModifierSurface modifierSurface))
+            {
+                accelerationMultiplier = modifierSurface.AccelerationMultiplier;
+            }
+
             Vector3 velocity = rigidbody.linearVelocity;
-            Vector3 currentHorizontal = new Vector3(velocity.x, 0f, velocity.z);
-            Vector3 targetHorizontal = _moveDirection * (_tuning.MaxSpeed * _inputMagnitude);
+            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            Vector3 targetVelocity = _moveDirection * (_tuning.MaxSpeed * _inputMagnitude) + _surfaceVelocity;
 
-            float maxDelta = _tuning.MaxAllowedAcceleration * accelerationMultiplier * fixedDeltaTime;
-            Vector3 newHorizontal = Vector3.MoveTowards(currentHorizontal, targetHorizontal, maxDelta);
+            bool isDecelerating = horizontalVelocity.sqrMagnitude > targetVelocity.sqrMagnitude + 0.0001f;
+            float movementMultiplier = ResolveMovementMultiplier(
+                isGrounded,
+                isDecelerating,
+                accelerationMultiplier);
 
-            velocity.x = newHorizontal.x;
-            velocity.z = newHorizontal.z;
+            float maxDelta = _tuning.MaxAllowedAcceleration * movementMultiplier * fixedDeltaTime;
+            Vector3 newHorizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, maxDelta);
+
+            velocity.x = newHorizontalVelocity.x + _knockbackVelocity.x;
+            velocity.z = newHorizontalVelocity.z + _knockbackVelocity.z;
             rigidbody.linearVelocity = velocity;
+        }
+
+        private void DecayKnockback(float fixedDeltaTime)
+        {
+            _knockbackVelocity = Vector3.MoveTowards(
+                _knockbackVelocity,
+                Vector3.zero,
+                _tuning.KnockbackDecay * fixedDeltaTime);
+        }
+
+        private float ResolveMovementMultiplier(
+            bool isGrounded,
+            bool isDecelerating,
+            float surfaceAccelerationMultiplier)
+        {
+            if (isGrounded)
+            {
+                return isDecelerating
+                    ? _movementSettings.GroundDecelerationMultiplier * surfaceAccelerationMultiplier
+                    : surfaceAccelerationMultiplier;
+            }
+
+            return isDecelerating
+                ? _movementSettings.AirborneDecelerationMultiplier
+                : _movementSettings.AirborneAccelerationMultiplier;
         }
     }
 }

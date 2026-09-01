@@ -1,4 +1,3 @@
-using MarioTest.Core;
 using UnityEngine;
 
 namespace MarioTest.Player
@@ -12,7 +11,7 @@ namespace MarioTest.Player
         public bool IsGrounded { get; private set; }
         public Vector3 GroundNormal { get; private set; } = Vector3.up;
         public float GroundDistance { get; private set; }
-        public int GroundLayer { get; private set; } = -1;
+        public Collider GroundCollider { get; private set; }
 
         public GroundDetector(CapsuleCollider capsule, GroundDetectionSettings settings)
         {
@@ -30,31 +29,51 @@ namespace MarioTest.Player
                 cast.Direction,
                 _hits,
                 cast.Distance,
-                PhysicsLayers.GroundMask,
+                Physics.DefaultRaycastLayers,
                 QueryTriggerInteraction.Ignore);
 
-            if (hitCount > 0
-                && _hits[0].normal.y >= _settings.MinGroundNormalY
-                && IsHitUnderFeet(cast.BottomCenter, cast.Radius, _hits[0].point))
+            if (hitCount > 0 && IsValidGroundHit(_hits[0], cast))
             {
                 IsGrounded = true;
                 GroundNormal = _hits[0].normal;
                 GroundDistance = _hits[0].distance;
-                GroundLayer = _hits[0].collider.gameObject.layer;
+                GroundCollider = _hits[0].collider;
                 return;
             }
 
             IsGrounded = false;
             GroundNormal = Vector3.up;
             GroundDistance = float.PositiveInfinity;
-            GroundLayer = -1;
+            GroundCollider = null;
         }
 
-        private static bool IsHitUnderFeet(Vector3 bottomCenter, float radius, Vector3 hitPoint)
+        private bool IsValidGroundHit(RaycastHit hit, GroundCast cast)
         {
-            Vector3 horizontalOffset = hitPoint - bottomCenter;
+            if (hit.collider == _capsule)
+            {
+                return false;
+            }
+
+            if (hit.rigidbody != null && hit.rigidbody == _capsule.attachedRigidbody)
+            {
+                return false;
+            }
+
+            if (hit.normal.y < _settings.MinGroundNormalY)
+            {
+                return false;
+            }
+
+            Vector3 supportPoint = hit.collider.ClosestPoint(cast.FeetPosition);
+            float verticalGap = cast.FeetPosition.y - supportPoint.y;
+            if (Mathf.Abs(verticalGap) > _settings.CheckDistance + _settings.ProbePadding)
+            {
+                return false;
+            }
+
+            Vector3 horizontalOffset = supportPoint - cast.FeetPosition;
             horizontalOffset.y = 0f;
-            return horizontalOffset.sqrMagnitude <= radius * radius;
+            return horizontalOffset.sqrMagnitude <= cast.FootprintRadius * cast.FootprintRadius;
         }
 
         private GroundCast BuildCast(Vector3 position, Quaternion rotation)
@@ -65,18 +84,20 @@ namespace MarioTest.Player
             (Vector3 up, float radiusScale, float heightScale) = GetCapsuleAxes(rotation);
 
             float fullRadius = _capsule.radius * radiusScale;
-            float radius = Mathf.Max(fullRadius - _settings.SkinWidth, 0.01f);
+            float footprintRadius = fullRadius * _settings.MaxFootprintRadiusScale;
+            float padding = _settings.ProbePadding;
 
             float halfHeight = Mathf.Max(_capsule.height * 0.5f * heightScale - fullRadius, 0f);
             Vector3 bottomCenter = capsuleCenter - up * halfHeight;
+            Vector3 feetPosition = bottomCenter - up * fullRadius;
 
-            float skin = _settings.SkinWidth;
             return new GroundCast(
-                bottomCenter,
-                bottomCenter + up * skin,
-                radius,
+                feetPosition + up * padding,
+                _settings.ProbeRadius,
+                footprintRadius,
+                feetPosition,
                 -up,
-                _settings.CheckDistance + skin);
+                _settings.CheckDistance + padding);
         }
 
         private (Vector3 up, float radiusScale, float heightScale) GetCapsuleAxes(Quaternion rotation)
@@ -102,18 +123,26 @@ namespace MarioTest.Player
 
         private readonly struct GroundCast
         {
-            public GroundCast(Vector3 bottomCenter, Vector3 origin, float radius, Vector3 direction, float distance)
+            public GroundCast(
+                Vector3 origin,
+                float radius,
+                float footprintRadius,
+                Vector3 feetPosition,
+                Vector3 direction,
+                float distance)
             {
-                BottomCenter = bottomCenter;
                 Origin = origin;
                 Radius = radius;
+                FootprintRadius = footprintRadius;
+                FeetPosition = feetPosition;
                 Direction = direction;
                 Distance = distance;
             }
 
-            public Vector3 BottomCenter { get; }
             public Vector3 Origin { get; }
             public float Radius { get; }
+            public float FootprintRadius { get; }
+            public Vector3 FeetPosition { get; }
             public Vector3 Direction { get; }
             public float Distance { get; }
         }

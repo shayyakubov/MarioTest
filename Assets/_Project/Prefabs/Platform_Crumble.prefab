@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2995710386167667476
+--- !u!1 &8117346594736592567
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,50 +8,50 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3144569661279981127}
-  - component: {fileID: 9082018625778748284}
-  - component: {fileID: 7213632453158367437}
-  - component: {fileID: 1620412511192905935}
-  - component: {fileID: 5522466854148702873}
-  - component: {fileID: 5012498442560042680}
+  - component: {fileID: 7052287796895730484}
+  - component: {fileID: 4572830026296764441}
+  - component: {fileID: 4643982372588244237}
+  - component: {fileID: 9010581964271813462}
+  - component: {fileID: 4232059464956534230}
+  - component: {fileID: 2892726646200262127}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Platform_Crumble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3144569661279981127
+--- !u!4 &7052287796895730484
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
+  m_GameObject: {fileID: 8117346594736592567}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 5, y: 1.5, z: -6}
+  m_LocalScale: {x: 3, y: 0.5, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9082018625778748284
+--- !u!33 &4572830026296764441
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!136 &7213632453158367437
-CapsuleCollider:
+  m_GameObject: {fileID: 8117346594736592567}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &4643982372588244237
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
-  m_Material: {fileID: 13400000, guid: 382707c62b4d419e8def5a5b0e1d93c6, type: 2}
+  m_GameObject: {fileID: 8117346594736592567}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -62,18 +62,16 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1620412511192905935
+--- !u!23 &9010581964271813462
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
+  m_GameObject: {fileID: 8117346594736592567}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -92,7 +90,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 7a4c2e91b8d643f5a9e1c0d2f3b4a5e6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -116,69 +114,32 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &5522466854148702873
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 80
-  m_CollisionDetection: 2
---- !u!114 &5012498442560042680
+--- !u!114 &4232059464956534230
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2995710386167667476}
+  m_GameObject: {fileID: 8117346594736592567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c6a4f3e1d0f6855a2b3c6d7e8f9a0b1, type: 3}
+  m_Script: {fileID: 11500000, guid: d2d9b4a600b57ee40947839d0f731f76, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Player.PlayerController
-  _tuning:
-    _maxSpeed: 6
-    _maxAllowedAcceleration: 50
-    _moveInputDeadzone: 0.1
-    _riseGravity: -25
-    _fallGravity: -40
-    _maxFallSpeed: 20
-    _jumpVelocity: 12.5
-    _coyoteTime: 0.12
-    _jumpBuffer: 0.12
-    _lowJumpGravity: -80
-  _movementSettings:
-    _airborneAccelerationMultiplier: 0.25
-    _defaultGroundAccelerationMultiplier: 1
-    _layerAccelerations:
-    - _layerMask:
-        serializedVersion: 2
-        m_Bits: 64
-      _accelerationMultiplier: 1
-  _groundDetection:
-    _checkDistance: 0.1
-    _probePadding: 0.02
-    _probeRadius: 0.12
-    _maxSlopeAngle: 45
-    _maxFootprintRadiusScale: 0.35
-  _cameraTransform: {fileID: 0}
-  _debugGround: 0
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Platforms.CrumblePlatformVisual
+  _beepInterval: 0.1
+  _warningAlpha: 0.35
+--- !u!114 &2892726646200262127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8117346594736592567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f428414ebd22a8499fcc4d72910d100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Platforms.CrumblePlatformBehaviour
+  _standDuration: 0.5
+  _warnDuration: 0.25
+  _occupancyVerticalTolerance: 0.2

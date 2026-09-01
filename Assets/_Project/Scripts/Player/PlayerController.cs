@@ -1,10 +1,11 @@
+using MarioTest.Core;
 using UnityEngine;
 
 namespace MarioTest.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IKnockbackReceiver
     {
         [SerializeField] private PlayerTuning _tuning;
         [SerializeField] private PlayerMovementSettings _movementSettings = new();
@@ -21,6 +22,12 @@ namespace MarioTest.Player
 
         public bool IsGrounded => _groundDetector != null && _groundDetector.IsGrounded;
         public Vector3 GroundNormal => _groundDetector != null ? _groundDetector.GroundNormal : Vector3.up;
+
+        public void ApplyKnockback(Vector3 velocity)
+        {
+            _movement?.ApplyKnockback(velocity);
+            _rigidbody?.WakeUp();
+        }
 
         public void Initialize(IPlayerInput input)
         {
@@ -59,7 +66,7 @@ namespace MarioTest.Player
                 _rigidbody,
                 Time.fixedDeltaTime,
                 _groundDetector.IsGrounded,
-                _groundDetector.GroundLayer);
+                _groundDetector.GroundCollider);
             DrawGroundDebug();
         }
 
