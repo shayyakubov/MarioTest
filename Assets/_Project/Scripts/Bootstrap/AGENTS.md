@@ -8,7 +8,7 @@ In use for input composition.
 
 ## GameBootstrap
 
-Composition root for scene-level wiring. Runs early (`DefaultExecutionOrder(-100)`).
+Composition root for scene-level wiring. `Update` merges input (`Tick`) after `MobileTouchInput` (-50), before `PlayerController` (0).
 
 **Responsibilities:**
 - Hold `InputActionAsset` reference (only bootstrap knows about Input System asset)
@@ -23,4 +23,4 @@ Composition root for scene-level wiring. Runs early (`DefaultExecutionOrder(-100
 
 ## Future
 
-Extend bootstrap for remote config fetch, UI wiring, game state, touch UI feeding `PlayerInputReader.SetTouchMove`.
+Extend bootstrap for remote config fetch, game state. Touch UI wired via `MobileTouchInput` → `PlayerInputReader`.

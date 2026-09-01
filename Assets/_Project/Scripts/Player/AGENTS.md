@@ -16,8 +16,8 @@ Agent summary. **Detail:** [docs/features/player-movement.md](../../../../docs/f
 | `PlayerController` | `Update`: input. `FixedUpdate`: detect → movement |
 | `PlayerMovement` | Plain C#: jump, gravity, horizontal |
 | `GroundDetector` | Plain C#: spherecast → `IsGrounded`, `GroundNormal` |
-| `IPlayerInput` | Portable input (`Move`, `JumpHeld`, `JumpPressedThisFrame`) |
-| `PlayerInputReader` | Input System only |
+| `IPlayerInput` | Portable read API (`Move`, jump) for `PlayerController` |
+| `PlayerInputReader` | Input System + touch merge; `Tick()` then read via `IPlayerInput` |
 | `PlayerTuning` / `PlayerMovementSettings` / `GroundDetectionSettings` | Tunables on controller |
 | `GameBootstrap` | Wires `Initialize(IPlayerInput)` |
 

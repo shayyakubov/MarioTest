@@ -7,8 +7,15 @@ namespace MarioTest.Player
     {
         private readonly InputAction _moveAction;
         private readonly InputAction _jumpAction;
+
+        private Vector2 _move;
+        private bool _jumpHeld;
+        private bool _jumpPressedThisFrame;
+
         private Vector2 _touchMove;
-        private bool _hasTouchMove;
+        private bool _touchMoveActive;
+        private bool _touchJumpHeld;
+        private bool _touchJumpPressed;
 
         public PlayerInputReader(InputActionAsset inputActions)
         {
@@ -17,22 +24,11 @@ namespace MarioTest.Player
             _jumpAction = playerMap.FindAction("Jump");
         }
 
-        public Vector2 Move
-        {
-            get
-            {
-                if (_hasTouchMove)
-                {
-                    return _touchMove;
-                }
+        public Vector2 Move => _move;
 
-                return _moveAction.ReadValue<Vector2>();
-            }
-        }
+        public bool JumpHeld => _jumpHeld;
 
-        public bool JumpHeld => _jumpAction.IsPressed();
-
-        public bool JumpPressedThisFrame => _jumpAction.WasPressedThisFrame();
+        public bool JumpPressedThisFrame => _jumpPressedThisFrame;
 
         public void Enable()
         {
@@ -46,16 +42,34 @@ namespace MarioTest.Player
             _jumpAction.Disable();
         }
 
-        public void SetTouchMove(Vector2 move)
+        public void Tick()
+        {
+            _move = _touchMoveActive ? _touchMove : _moveAction.ReadValue<Vector2>();
+            _jumpHeld = _touchJumpHeld || _jumpAction.IsPressed();
+            _jumpPressedThisFrame = _touchJumpPressed || _jumpAction.WasPressedThisFrame();
+            _touchJumpPressed = false;
+        }
+
+        public void SetTouchMove(Vector2 move, bool active)
         {
             _touchMove = move;
-            _hasTouchMove = move.sqrMagnitude > 0f;
+            _touchMoveActive = active;
         }
 
         public void ClearTouchMove()
         {
             _touchMove = Vector2.zero;
-            _hasTouchMove = false;
+            _touchMoveActive = false;
+        }
+
+        public void SetTouchJumpHeld(bool held)
+        {
+            _touchJumpHeld = held;
+        }
+
+        public void SetTouchJumpPressed()
+        {
+            _touchJumpPressed = true;
         }
     }
 }

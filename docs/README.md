@@ -26,3 +26,5 @@ Human-readable feature descriptions. Kept separate from `AGENTS.md` so agent con
 |---------|--------|-----|
 | Player movement (horizontal, gravity, ground) | Implemented | [player-movement.md](features/player-movement.md) |
 | Player jump (variable, coyote, buffer) | Implemented | [player-jump.md](features/player-jump.md) |
+| Mobile touch (joystick + jump) | Implemented | [mobile-touch-input.md](features/mobile-touch-input.md) |
+| Camera follow (third-person) | Implemented | [camera-follow.md](features/camera-follow.md) |
