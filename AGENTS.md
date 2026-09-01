@@ -14,7 +14,8 @@ Full brief requirements live in `.cursor/rules/project-context.mdc`. Assignment 
 |------|-------|
 | Coding standards, syntax, patterns | `.cursor/rules/` (e.g. `unity-csharp.mdc`) |
 | Assignment constraints & build order | `.cursor/rules/project-context.mdc` |
-| Feature design (once decided) | Subfolder `AGENTS.md` |
+| Feature design (agent summary) | Subfolder `AGENTS.md` |
+| Feature design (detail) | `docs/features/` |
 | Repo-wide process | This file |
 
 Do not duplicate rules across both places.
@@ -22,8 +23,9 @@ Do not duplicate rules across both places.
 ## Documentation policy
 
 - **This file** — repo-wide process only.
-- **Subfolder `AGENTS.md`** — added **when we establish a feature's design**, not before. One per meaningful area (e.g. a scripts subfolder once movement is designed).
-- Each subfolder doc should capture: what the feature does, key decisions made, known edge cases, and what is explicitly out of scope for that feature.
+- **Subfolder `AGENTS.md`** — lean agent context per code area: status, architecture, key decisions, links to docs. Not the full feature write-up.
+- **`docs/features/`** — fuller feature descriptions (behavior, formulas, test plans). One file per feature when non-trivial. Index: `docs/README.md`.
+- Each `AGENTS.md` should capture: what the feature does, key decisions, known edge cases, out of scope — **briefly**, with pointers to `docs/features/` for depth.
 - **Tuned numbers** — defaults live in code (`PlayerTuning`, etc.) and scene/prefab; feature `AGENTS.md` describes *what* to tune, not duplicate values. Final shipped numbers go in `README.md`.
 - Do not invent architecture, APIs, or folder layouts that do not exist in the repo yet.
 

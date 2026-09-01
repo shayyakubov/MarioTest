@@ -26,8 +26,8 @@ Working notes for the NumTalk assignment. Pull from here when writing `DECISIONS
 
 **Vertical (partial):**
 - Custom gravity with separate rise/fall strength and terminal fall speed — implemented
-- Jump: set Y velocity directly on jump frame — not yet built
-- Variable jump height, coyote time, jump buffer — not yet built
+- Jump design documented in `docs/features/player-jump.md` — not implemented yet
+- Variable jump height, coyote time, jump buffer — specified there; coyote/buffer on player side, not GroundDetector
 - Disable built-in gravity; movement applies gravity manually — done
 
 ---
