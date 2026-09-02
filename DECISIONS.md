@@ -6,79 +6,81 @@
 
 I chose a dynamic Rigidbody because the requirements include physical interactions like crate pushing and knockback. This lets me use Unity's built-in physics instead of recreating those interactions manually.
 
-With a CharacterController, collisions mainly resolve the character's own movement. Pushing Rigidbody objects would need custom code to detect hits, apply push forces, and handle how both objects respond. Knockback on ice or a moving platform gets worse — you're calling Move() without cleanly owning velocity. I also needed custom gravity, coyote time, and variable jump height; a Rigidbody lets me set that directly each frame.
+With a CharacterController, collisions mainly resolve the character's own movement. Pushing Rigidbody objects would need custom code to detect hits, apply push forces, and decide how both objects respond. A Rigidbody gives me a better base for those interactions while still letting me keep the player movement controlled in code.
 
 **Pros**
-- Unity physics handles crate collisions and knockback
+- Unity physics handles crate collisions and external pushes naturally
 - Less custom collision-response code for push interactions
-- Run speed, knockback, and moving platforms compose naturally
+- Knockback and moving-platform motion can compose with the player's existing movement
 
 **Cons**
-- More custom controller logic — ground checks, gravity, movement tuning
-- Physics edge cases (wall stick, false ground) need careful handling so physics doesn't fight the intended feel
+- More custom controller logic, especially ground checks, gravity, and movement tuning
+- Physics edge cases such as wall stick and false grounding need careful handling so physics does not fight the intended feel
 
 ---
 
 ### 2. Zero friction + tighter ground check
 
-The player capsule uses zero friction. Ground detection is a spherecast, but the hit must land under the feet — not a side graze on a platform edge. Braking and ice are done by scaling acceleration in the movement code, not PhysicMaterial friction.
+The player capsule uses zero friction. Ground detection is a spherecast, but the hit also has to be under the player's feet rather than just a side graze on a platform edge. Braking and ice are handled by changing acceleration in the movement code instead of relying on PhysicMaterial friction.
 
-During playtesting the player would hang mid-air against platform walls. The ground check was hitting the top of a platform from the side and treating it as standing, and wall friction was fighting gravity. This approach fixed both without rewriting movement from scratch.
+During playtesting, the player could hang in the air against platform walls. The ground check was sometimes catching the top of a platform from the side and treating it as valid ground, while wall friction was also fighting gravity. Zero friction plus the tighter ground check fixed both without changing the whole movement model.
 
 **Pros**
-- Fixed wall-hang and false-ground bugs
-- You can tune how ice feels by playing with the acceleration change parameter
-- Run/brake feel stays consistent — not fighting Unity friction
+- Fixed wall-hang and false-ground cases
+- Ice can be tuned directly through acceleration
+- Run and braking feel stay predictable instead of depending on Unity friction
 
 **Cons**
-- Sticky or muddy surfaces need explicit code, not a material value
-- Ice platforms need custom code too — a surface component and movement logic, not just a slippery material
-- Extra ground-check logic to maintain
+- Sticky or muddy surfaces would need explicit movement modifiers
+- Ice needs a surface component and movement logic instead of only a PhysicMaterial
+- Ground detection has a little more custom logic to maintain
 
 ---
 
-### 3. One script handles all movement — including knockback
+### 3. One movement path, including knockback
 
-All player movement goes through `PlayerMovement` — run speed, ice slowdown, moving platforms, knockback, all of it. Nothing else should directly push the Rigidbody around, because that's where max speed, acceleration, and surface modifiers get applied.
+All player movement goes through `PlayerMovement`: normal movement, ice modifiers, moving-platform velocity, and knockback. Other systems can request an effect, but they should not directly take over the Rigidbody movement.
 
-If knockback just used a physics force (AddForce on hit), that push lives outside my movement code. Next frame my code tries to set speed to max 8 — but the force already added extra speed on top. They work against each other. I could cap total speed at 8 to fix that, but then getting shot barely pushes you. Leave the cap off and one hit sends you flying.
+Knockback is stored separately from normal controlled movement. That means a hit can push the player above normal run speed without the movement code immediately clamping it away. The knockback then decays over time while the player still keeps some steering control.
 
-So when a projectile hits, I store the push in a separate knockback value. Each frame the movement script updates run speed from input, fades knockback on its own, adds them together, and writes the result. One place computes movement, everything composes there.
+This also keeps the different movement effects composable: normal input still works while airborne, on ice, or on a moving platform, and knockback does not need a separate movement mode for each case.
 
 **Pros**
-- You can still move while being pushed — you're not locked out
-- Hits can feel strong even though max run speed is only 8
-- Ice, air, and moving platforms all go through the same path — knockback doesn't need its own special cases
-- Easy to tune with `knockbackDecay` and `maxKnockbackSpeed`
+- The player can still steer while being pushed
+- Hits can feel strong even with a lower normal run speed
+- Ice, air movement, moving platforms, and knockback share the same movement path
+- Easy to tune with values such as `knockbackDecay` and `maxKnockbackSpeed`
 
 **Cons**
-- Two speed values to keep in sync instead of one
-- Everything that moves the player has to go through this script — bypass it and things break
-- Getting push strength and fade-out time to feel right took playtesting
-
-**What I could've done instead**
-- **Physics impulse** — add force on hit and let Unity handle it. Less code, but it skips max speed and surface modifiers entirely.
-- **One speed, hard cap** — add knockback into the same velocity and clamp to max run speed. Simple, but hits feel weak.
-- **Disable input during knockback** — player can't steer until it ends. Easy to implement, but feels bad on mobile.
-- **Override velocity on hit** — replace movement entirely for half a second. Strong hit feel, but you lose the "keep control" requirement.
-
----
+- Normal movement and knockback are separate values that have to be combined correctly
+- Anything that moves the player outside this path can break the assumptions
+- Push strength and decay still need playtesting to feel right
 
 ## Where I'd take the controller next
 
-Turn responsiveness and stopping — tune `maxAllowedAcceleration` and ground/air deceleration multipliers so direction changes and releasing the stick feel crisp. Maybe higher acceleration when reversing direction (decelerating into a turn).
+**Turn responsiveness and stopping** — tune `maxAllowedAcceleration` and the ground/air acceleration values so reversing direction and releasing the stick feel sharper. I would also try a higher acceleration when reversing direction than when accelerating normally.
 
-Jump tuning — short hops feel too low today because early release slams `lowJumpGravity`. Jump cut on button release and retune so taps give a natural hop and holds give a clearly higher full jump.
+**Jump tuning** — short hops currently feel too low because early release applies the stronger low-jump gravity too aggressively. I would add or retune the jump cut so taps give a natural short hop while holding still gives a clearly higher full jump.
 
-Surface lookup — platforms already use two interfaces: `IMovingSurface` for carry velocity (moving platforms) and `IMovementModifierSurface` for ice (accel multiplier). Movement queries them in two different places today. I'd pull that into one lookup that returns a small data struct — carry velocity, accel multiplier, etc. — so movement just reads the struct instead of knowing about each interface.
+**Surface lookup** — platforms currently expose `IMovingSurface` for carry velocity and `IMovementModifierSurface` for things like ice. `PlayerMovement` queries them separately. If more surface behaviours were added, I would probably collect those values into one small surface-data result so the movement code reads the final values in one place.
 
+---
 
 ## AI note
 
-**Generated vs mine:** Roughly 40% AI-generated (scene builders, bootstrap wiring, HUD/checkpoint/pickup managers, layer setup). Roughly 60% written or substantially rewritten by me (PlayerMovement, ground detection, stomp/side-hit, knockback composition, most tuning). I code-review AI output before Play on every feature — not much survives unchanged.
+**Generated vs mine:** Roughly 60% AI-generated, mainly scene builders, bootstrap wiring, HUD/checkpoint/pickup managers, layer setup, and mechanical refactors. Roughly 40% was written or substantially rewritten by me, especially `PlayerMovement`, ground detection, stomp/side-hit logic, knockback composition, and most tuning.
 
-**Got wrong:** Jump input was placed after the move deadzone early-return in `PlayerController.Update`, which would skip coyote/buffer when standing still. Caught reading the diff before playtesting — moved jump reading ahead of the deadzone return.
+I also used AI for small mechanical edits such as extracting or moving code, exposing fields in the Inspector, and similar refactors. These were mostly faster to describe than type manually, but I reviewed the diff before accepting them.
 
-**Rejected:** Tag checks on projectile hits in `OnTriggerEnter`. Brief requires a layer collision matrix; I used `PhysicsLayersSetup` and layer ignores instead.
+**Got wrong:** Jump input was originally read after the movement deadzone early-return in `PlayerController.Update`, which meant coyote time and jump buffering could be skipped while standing still. I caught it while reviewing the diff before playtesting and moved jump input ahead of that return.
 
-Workflow: for bigger features I wrote a short feature doc, had the assistant plan against it, reviewed the plan and generated files before Play, then playtested and sent back small fixes. Scene builders and test scenes were the biggest time-saver.
+
+**Rejected:** The assistant suggested tag checks for projectile hits inside `OnTriggerEnter`. The requirement explicitly asks for the layer collision matrix, so I used `PhysicsLayersSetup` and layer-based collision filtering instead.
+
+a lot of times the AI broke SingleResponsibility and didnt split code into files and methods, sometimes he initialized Scripts with serialized fields that u need to drag
+even though we have GameBootstrap class that helps keep references in one place and manually injects them to relevant features (also helps in turning them into regular csharp classes that are not dependant on unity life cycle)
+
+
+**Workflow:** For bigger features, I wrote a short feature description, had the assistant plan against it, reviewed the plan and generated files, then playtested and sent back small fixes. Scene builders and test-scene setup were the biggest time-savers.
+
+for smaller features i usually describe a small task (should be one responsibility) and code review plus test..
