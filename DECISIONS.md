@@ -75,13 +75,10 @@ Surface lookup — platforms already use two interfaces: `IMovingSurface` for ca
 
 ## AI note
 
-Used Cursor for scene builders, bootstrap wiring, layer setup. Most of what it generated got corrected before I even hit Play — basically a code review every time. Movement and ground detection are mostly mine after going back and forth on the design.
+**Generated vs mine:** Roughly 40% AI-generated (scene builders, bootstrap wiring, HUD/checkpoint/pickup managers, layer setup). Roughly 60% written or substantially rewritten by me (PlayerMovement, ground detection, stomp/side-hit, knockback composition, most tuning). I code-review AI output before Play on every feature — not much survives unchanged.
 
-One example: it put jump input after a move deadzone early return, which would've broken coyote/buffer when standing still. I caught that reading the code, not playtesting — moved jump reading to the top of Update.
+**Got wrong:** Jump input was placed after the move deadzone early-return in `PlayerController.Update`, which would skip coyote/buffer when standing still. Caught reading the diff before playtesting — moved jump reading ahead of the deadzone return.
 
-It also suggested filtering projectiles with tags in OnTriggerEnter. Skipped that — the brief wants layers, so I used the collision matrix in PhysicsLayersSetup instead.
+**Rejected:** Tag checks on projectile hits in `OnTriggerEnter`. Brief requires a layer collision matrix; I used `PhysicsLayersSetup` and layer ignores instead.
 
-For big features i explaind the exact requirement to the ai, generated a docfile.md (like a small PRD for the feature) and asked the AI to generate a plan prompt, then the plan prompt refs this doc and i build a plan with better context. when the plan was ready i walked code reviewed the files and let the ai fix, when i was ready i started testing and pointing bugs, some where very small like unbinded scripts or small logic issues which i fixed alone
-and some i gave to the ai to find, while making sure his solution made sense. (there wasnt any major bug that took hours)
-
-The AI helped me generate a scene with all of my prefabs very quickly, sometimes just test scenes which sped my work by a lot.
+Workflow: for bigger features I wrote a short feature doc, had the assistant plan against it, reviewed the plan and generated files before Play, then playtested and sent back small fixes. Scene builders and test scenes were the biggest time-saver.
