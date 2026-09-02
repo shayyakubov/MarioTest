@@ -41,7 +41,7 @@ Layer layout
 10 Pushable — crates
 
 Projectile vs Enemy: off. Projectile vs Projectile: off.
-Ground probe also stands on Pushable and Default.
+Ground check also stands on Pushable and Default.
 
 
 Known issues

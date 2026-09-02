@@ -22,7 +22,6 @@ namespace MarioTest.Editor
         {
             if (Object.FindAnyObjectByType<PatrolShooterEnemy>() != null)
             {
-                Debug.LogWarning("Scene already contains a PatrolShooterEnemy.");
                 return;
             }
 
@@ -43,7 +42,6 @@ namespace MarioTest.Editor
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             AssetDatabase.SaveAssets();
-            Debug.Log("Patrol shooter enemy added to scene.");
         }
 
         [MenuItem("MarioTest/Create Player Movement Test Scene")]
@@ -72,7 +70,6 @@ namespace MarioTest.Editor
             EditorSceneManager.SaveScene(scene, ScenePath);
             PhysicsLayersSetup.ConfigurePrefabs();
             AssetDatabase.SaveAssets();
-            Debug.Log($"Player movement test scene saved to {ScenePath}");
         }
 
         private static void CreateTestPlatforms()

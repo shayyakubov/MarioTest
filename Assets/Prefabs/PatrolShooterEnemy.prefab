@@ -35,6 +35,8 @@ Transform:
   m_LocalScale: {x: 1.5, y: 0.75, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6865568759788638643}
+  - {fileID: 8131756823772163870}
   - {fileID: 5740999239676621947}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,17 +175,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f375a689ce12fc34b998d20be1fe50f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Enemies.PatrolShooterEnemy
-  _patrolPointA: {fileID: 0}
-  _patrolPointB: {fileID: 0}
+  _patrolPointA: {fileID: 6865568759788638643}
+  _patrolPointB: {fileID: 8131756823772163870}
   _projectilePrefab: {fileID: 881122334455667706, guid: b8c7d6e5f4a392817064554433221109, type: 3}
   _muzzle: {fileID: 5740999239676621947}
   _patrolSpeed: 2
-  _shootRange: 12
+  _shootRange: 20
   _fireInterval: 3
   _maxShootElevationAngle: 20
   _predictionIterations: 3
   _patrolArrivalDistance: 0.1
   _fallbackMuzzleHeight: 0.3
+--- !u!1 &2955954724337718641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8131756823772163870}
+  m_Layer: 0
+  m_Name: Enemy_PatrolB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8131756823772163870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2955954724337718641}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.89, y: 0, z: 1.29}
+  m_LocalScale: {x: 0.6666667, y: 1.3333334, z: 0.6666667}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7685105145627094544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8140927456128898052
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +244,37 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7685105145627094544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9049434627851475104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6865568759788638643}
+  m_Layer: 0
+  m_Name: Enemy_PatrolA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6865568759788638643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9049434627851475104}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.2, y: 0, z: -0.93}
+  m_LocalScale: {x: 0.6666667, y: 1.3333334, z: 0.6666667}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7685105145627094544}

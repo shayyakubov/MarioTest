@@ -18,7 +18,10 @@ namespace MarioTest.Enemies
         [SerializeField] private float _patrolArrivalDistance = 0.1f;
         [SerializeField] private float _fallbackMuzzleHeight = 0.3f;
 
-        private Transform _patrolTarget;
+        private Vector3 _patrolWorldA;
+        private Vector3 _patrolWorldB;
+        private Vector3 _patrolDestination;
+        private bool _hasPatrol;
         private Transform _targetTransform;
         private Rigidbody _rigidbody;
         private Rigidbody _targetRigidbody;
@@ -28,12 +31,12 @@ namespace MarioTest.Enemies
         {
             _targetTransform = targetTransform;
             _targetRigidbody = targetRigidbody;
-            _patrolTarget = _patrolPointA;
         }
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            CachePatrolWorldPoints();
         }
 
         private void FixedUpdate()
@@ -46,22 +49,32 @@ namespace MarioTest.Enemies
             TryShoot();
         }
 
-        private void Patrol()
+        private void CachePatrolWorldPoints()
         {
             if (_patrolPointA == null || _patrolPointB == null)
             {
+                _hasPatrol = false;
                 return;
             }
 
-            if (_patrolTarget == null)
+            // Capture world positions so child-authored points stay fixed while we move.
+            _patrolWorldA = _patrolPointA.position;
+            _patrolWorldB = _patrolPointB.position;
+            _patrolDestination = _patrolWorldA;
+            _hasPatrol = true;
+        }
+
+        private void Patrol()
+        {
+            if (!_hasPatrol || _rigidbody == null)
             {
-                _patrolTarget = _patrolPointA;
+                return;
             }
 
             Vector3 previousPosition = _rigidbody.position;
             Vector3 nextPosition = Vector3.MoveTowards(
                 previousPosition,
-                _patrolTarget.position,
+                _patrolDestination,
                 _patrolSpeed * Time.fixedDeltaTime);
 
             _rigidbody.MovePosition(nextPosition);
@@ -74,9 +87,9 @@ namespace MarioTest.Enemies
             }
 
             float arrivalDistanceSqr = _patrolArrivalDistance * _patrolArrivalDistance;
-            if ((nextPosition - _patrolTarget.position).sqrMagnitude < arrivalDistanceSqr)
+            if ((nextPosition - _patrolDestination).sqrMagnitude < arrivalDistanceSqr)
             {
-                _patrolTarget = _patrolTarget == _patrolPointA ? _patrolPointB : _patrolPointA;
+                _patrolDestination = _patrolDestination == _patrolWorldA ? _patrolWorldB : _patrolWorldA;
             }
         }
 

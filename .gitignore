@@ -38,13 +38,13 @@ local.properties
 Thumbs.db
 Desktop.ini
 
-# Builds
+# Builds (submission APK goes in apk/)
 *.apk
+!apk/*.apk
 *.aab
 *.ipa
 *.app
 *.unitypackage
-apk/
 
 # Crash reports
 sysinfo.txt

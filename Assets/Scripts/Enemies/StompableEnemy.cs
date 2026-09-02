@@ -136,8 +136,7 @@ namespace MarioTest.Enemies
             }
 
             TryApplySideKnockback(collision, playerRigidbody);
-            Debug.Log("[StompableEnemy] side hit — calling TakeHit");
-            lifeTarget.TakeHit();
+            lifeTarget.TakeHit(respawnAtCheckpoint: false);
             return true;
         }
 

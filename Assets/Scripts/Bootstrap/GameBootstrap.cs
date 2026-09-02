@@ -37,6 +37,11 @@ namespace MarioTest.Bootstrap
                 _mobileTouchInput.Initialize(_inputReader);
             }
 
+            if (_gameHud != null)
+            {
+                _gameHud.Initialize(_playerHealth, _pickupsManager);
+            }
+
             InitializeGameSession();
         }
 
@@ -55,7 +60,6 @@ namespace MarioTest.Bootstrap
                 _playerHealth,
                 _playerRigidbody,
                 _checkpointsManager,
-                _pickupsManager,
                 _followCamera,
                 _gameHud,
                 _goalTrigger);

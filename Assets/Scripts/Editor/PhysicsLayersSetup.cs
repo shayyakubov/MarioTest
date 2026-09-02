@@ -31,7 +31,6 @@ namespace MarioTest.Editor
             ConfigurePrefabs();
             ApplyToOpenScene();
             AssetDatabase.SaveAssets();
-            Debug.Log("Physics layers and collision matrix applied.");
         }
 
         public static void EnsureConfigured()

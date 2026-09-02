@@ -17,7 +17,6 @@ namespace MarioTest.Systems
         private PlayerHealth _playerHealth;
         private Rigidbody _playerRigidbody;
         private CheckpointsManager _checkpointsManager;
-        private PickupsManager _pickupsManager;
         private FollowCameraController _followCamera;
         private GameHud _gameHud;
         private GoalTrigger _goalTrigger;
@@ -29,7 +28,6 @@ namespace MarioTest.Systems
             PlayerHealth playerHealth,
             Rigidbody playerRigidbody,
             CheckpointsManager checkpointsManager,
-            PickupsManager pickupsManager,
             FollowCameraController followCamera,
             GameHud gameHud,
             GoalTrigger goalTrigger)
@@ -48,14 +46,12 @@ namespace MarioTest.Systems
             _playerHealth = playerHealth;
             _playerRigidbody = playerRigidbody;
             _checkpointsManager = checkpointsManager;
-            _pickupsManager = pickupsManager;
             _followCamera = followCamera;
             _gameHud = gameHud;
             _goalTrigger = goalTrigger;
 
             Subscribe();
             _initialized = true;
-            Debug.Log($"[GameSession] Initialize — lives={_playerHealth.Lives}, acceptsHits={_playerHealth.AcceptsHits}");
         }
 
         private void OnDestroy()
@@ -75,8 +71,6 @@ namespace MarioTest.Systems
         {
             _playerHealth.Hit += OnHit;
             _playerHealth.Died += OnDied;
-            _gameHud?.Subscribe(_playerHealth);
-            _gameHud?.SubscribePickups(_pickupsManager);
 
             if (_gameHud != null)
             {
@@ -111,7 +105,7 @@ namespace MarioTest.Systems
         private void OnCourseCompleted()
         {
             SetPlayerControlEnabled(false);
-            StopPlayerMotion();
+            _playerController.StopMotion();
             _gameHud?.ShowCourseWin();
         }
 
@@ -119,11 +113,9 @@ namespace MarioTest.Systems
         {
             if (_isRespawning)
             {
-                Debug.Log("[GameSession] OnHit ignored — already respawning");
                 return;
             }
 
-            Debug.Log($"[GameSession] OnHit — lives={_playerHealth.Lives}, starting respawn");
             _isRespawning = true;
             _playerHealth.SetAcceptsHits(false);
             SetPlayerControlEnabled(false);
@@ -132,12 +124,11 @@ namespace MarioTest.Systems
 
         private void OnDied()
         {
-            Debug.Log($"[GameSession] OnDied — lives={_playerHealth.Lives}, isDead={_playerHealth.IsDead}");
             StopAllCoroutines();
             _isRespawning = false;
             _playerHealth.SetAcceptsHits(false);
             SetPlayerControlEnabled(false);
-            StopPlayerMotion();
+            _playerController.StopMotion();
         }
 
         private void SetPlayerControlEnabled(bool enabled)
@@ -148,35 +139,18 @@ namespace MarioTest.Systems
             }
         }
 
-        private void StopPlayerMotion()
-        {
-            if (_playerRigidbody == null)
-            {
-                return;
-            }
-
-            _playerRigidbody.linearVelocity = Vector3.zero;
-            _playerRigidbody.angularVelocity = Vector3.zero;
-        }
-
         private IEnumerator RespawnRoutine()
         {
-            Debug.Log($"[GameSession] RespawnRoutine — waiting {_respawnDelay}s");
             yield return new WaitForSeconds(_respawnDelay);
 
             if (!_playerHealth.IsDead)
             {
-                Debug.Log("[GameSession] RespawnRoutine — restore world + teleport");
                 _playerRespawn.RestoreWorld();
                 _playerRespawn.TeleportTo(
                     _checkpointsManager.GetSpawnPoint(),
                     _playerRigidbody,
                     _playerController,
                     _followCamera);
-            }
-            else
-            {
-                Debug.Log("[GameSession] RespawnRoutine — skipped teleport (player dead)");
             }
 
             FinishRespawn();
@@ -188,13 +162,8 @@ namespace MarioTest.Systems
 
             if (_playerHealth != null && !_playerHealth.IsDead)
             {
-                Debug.Log($"[GameSession] FinishRespawn — lives={_playerHealth.Lives}, re-enabling hits + control");
                 _playerHealth.SetAcceptsHits(true);
                 SetPlayerControlEnabled(true);
-            }
-            else
-            {
-                Debug.Log($"[GameSession] FinishRespawn — no restore (isDead={_playerHealth?.IsDead})");
             }
         }
     }

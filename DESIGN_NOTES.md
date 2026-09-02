@@ -52,7 +52,7 @@ Hard problems with solutions are logged in **[DECISIONS.md](DECISIONS.md)** — 
 
 **Input wiring:** GameBootstrap holds the Input Actions asset and PlayerController reference. PlayerController.Initialize receives IPlayerInput — no Input System or bootstrap knowledge. Same-GameObject Rigidbody and CapsuleCollider via GetComponent in Awake.
 
-**Layers:** `PhysicsLayers` resolves layers by name from Project Settings (no hardcoded indices). Ground probes use `PhysicsLayers.GroundMask`.
+**Layers:** `PhysicsLayers` resolves layers by name from Project Settings (no hardcoded indices). Ground detection uses `PhysicsLayers.StandableMask`.
 
 ---
 

@@ -59,11 +59,6 @@ namespace MarioTest.Editor
             EditorSceneManager.SaveScene(scene, ScenePath);
             PhysicsLayersSetup.ConfigurePrefabs();
             AssetDatabase.SaveAssets();
-            Debug.Log(
-                $"Course scene saved to {ScenePath}. " +
-                $"Max jump height {CourseLayout.PublishedMaxJumpHeight}m, " +
-                $"max jump distance {CourseLayout.PublishedMaxJumpDistance}m, " +
-                $"safe gap {CourseLayout.SafeGap}m.");
         }
 
         private static void BuildCourseGeometry(Transform parent)

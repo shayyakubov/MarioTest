@@ -14,6 +14,7 @@ Runs at `-10`. `Update` merges input (`Tick`) after `MobileTouchInput` (-50), be
 - Hold scene references and inject them at startup
 - Create `PlayerInputReader` → `PlayerController.Initialize` + `MobileTouchInput.Initialize`
 - Resolve player components and inject into `GameSession.Initialize`
+- Bind `GameHud.Initialize(playerHealth, pickupsManager)`
 - Enable / disable input actions in `OnEnable` / `OnDisable`
 
 **Inspector wiring:**

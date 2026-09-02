@@ -42,15 +42,9 @@ Prefer regular C# classes and structs when Unity lifecycle is not required.
 
 Keep MonoBehaviours thin: read input / hold refs / delegate to plain objects.
 
-## Component injection
+## Component refs
 
-Use InjectComponent for same-GameObject component refs instead of GetComponent in Awake. The reference is resolved in the editor and serialized — no runtime lookup.
-
-```csharp
-[SerializeField, InjectComponent] private Rigidbody _rigidbody;
-```
-
-Use SerializeField for scene/external refs (camera, prefabs). Reserve GetComponent for dynamic or runtime-only cases.
+Use SerializeField for same-GameObject and scene/external refs (camera, prefabs). Reserve GetComponent for dynamic or runtime-only cases.
 
 ## Unity patterns
 

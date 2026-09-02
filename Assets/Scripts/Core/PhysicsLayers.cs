@@ -23,8 +23,9 @@ namespace MarioTest.Core
         public static int EnemyMask => 1 << EnemyLayer;
         public static int ProjectileMask => 1 << ProjectileLayer;
         public static int PushableMask => 1 << PushableLayer;
+        public static int DefaultMask => 1 << DefaultLayer;
 
-        /// <summary>Layers the ground probe may treat as standable surfaces.</summary>
-        public static int GroundProbeMask => GroundMask | PushableMask | (1 << DefaultLayer);
+        /// <summary>Layers treated as standable surfaces for ground detection.</summary>
+        public static int StandableMask => GroundMask | PushableMask | DefaultMask;
     }
 }

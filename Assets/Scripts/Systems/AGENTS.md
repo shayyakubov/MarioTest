@@ -20,9 +20,10 @@
 
 ## Hit flow
 
-1. Fall (death plane) / enemy / kill zone → `PlayerHealth.TakeHit()`
+1. Fall (death plane) → `PlayerHealth.TakeHit()` → respawn at checkpoint
+2. Enemy side hit → `TakeHit(respawnAtCheckpoint: false)` → lose life, keep playing
 2. Still alive → `Hit` → `GameSession` respawn
-3. 0 lives → `Died` → `GameSession` disables input; `GameHud` shows overlay
+3. 0 lives → `Died` → `GameSession` disables input; `GameHud` shows overlay (HUD bound in `GameBootstrap`)
 4. Goal → `GoalTrigger.CourseReached` → `GameSession` disables input; `GameHud` shows course-win overlay
 
 ## Tune in Inspector

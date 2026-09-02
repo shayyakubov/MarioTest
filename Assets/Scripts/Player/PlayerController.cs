@@ -48,6 +48,19 @@ namespace MarioTest.Player
             _movement?.Reset();
         }
 
+        public void StopMotion()
+        {
+            _movement?.Reset();
+
+            if (_rigidbody == null)
+            {
+                return;
+            }
+
+            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+        }
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();

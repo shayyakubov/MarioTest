@@ -2,6 +2,6 @@ namespace MarioTest.Core
 {
     public interface ILifeTarget
     {
-        void TakeHit();
+        void TakeHit(bool respawnAtCheckpoint = true);
     }
 }

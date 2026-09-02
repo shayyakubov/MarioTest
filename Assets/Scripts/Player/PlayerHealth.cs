@@ -30,33 +30,31 @@ namespace MarioTest.Player
             LivesChanged?.Invoke(_lives);
         }
 
-        public void TakeHit()
+        public void TakeHit(bool respawnAtCheckpoint = true)
         {
             if (_isDead || !AcceptsHits)
             {
-                Debug.Log($"[PlayerHealth] TakeHit ignored — isDead={_isDead}, acceptsHits={AcceptsHits}, lives={_lives}");
                 return;
             }
 
             _lives--;
-            Debug.Log($"[PlayerHealth] TakeHit — {_lives} lives left");
             LivesChanged?.Invoke(_lives);
 
             if (_lives <= 0)
             {
                 _isDead = true;
-                Debug.Log("[PlayerHealth] Died — invoking Died");
                 Died?.Invoke();
                 return;
             }
 
-            Debug.Log("[PlayerHealth] Hit — invoking Hit");
-            Hit?.Invoke();
+            if (respawnAtCheckpoint)
+            {
+                Hit?.Invoke();
+            }
         }
 
         public void SetAcceptsHits(bool acceptsHits)
         {
-            Debug.Log($"[PlayerHealth] SetAcceptsHits {AcceptsHits} → {acceptsHits} (lives={_lives}, isDead={_isDead})");
             AcceptsHits = acceptsHits;
         }
     }

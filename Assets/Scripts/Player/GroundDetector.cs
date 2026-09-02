@@ -30,7 +30,7 @@ namespace MarioTest.Player
                 cast.Direction,
                 _hits,
                 cast.Distance,
-                PhysicsLayers.GroundProbeMask,
+                PhysicsLayers.StandableMask,
                 QueryTriggerInteraction.Ignore);
 
             if (hitCount > 0 && IsValidGroundHit(_hits[0], cast))

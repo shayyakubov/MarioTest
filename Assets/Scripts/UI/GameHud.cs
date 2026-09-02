@@ -27,36 +27,29 @@ namespace MarioTest.UI
         {
             UnsubscribeOverlay(_gameOverOverlay);
             UnsubscribeOverlay(_courseWinOverlay);
-            Unsubscribe();
+            UnsubscribeHealth();
             UnsubscribePickups();
         }
 
-        public void Subscribe(PlayerHealth playerHealth)
+        public void Initialize(PlayerHealth playerHealth, PickupsManager pickupsManager)
         {
-            Unsubscribe();
+            UnsubscribeHealth();
+            UnsubscribePickups();
+
             _playerHealth = playerHealth;
-
-            if (_playerHealth == null)
-            {
-                return;
-            }
-
-            _playerHealth.LivesChanged += OnLivesChanged;
-            _playerHealth.Died += OnDied;
-            Debug.Log("[GameHud] Subscribe");
-        }
-
-        public void SubscribePickups(PickupsManager pickupsManager)
-        {
-            UnsubscribePickups();
             _pickupsManager = pickupsManager;
 
-            if (_pickupsManager == null)
+            if (_playerHealth != null)
             {
-                return;
+                _playerHealth.LivesChanged += OnLivesChanged;
+                _playerHealth.Died += OnDied;
+                _livesHud?.SetLives(_playerHealth.Lives);
             }
 
-            _pickupsManager.CoinCollected += OnCoinCollected;
+            if (_pickupsManager != null)
+            {
+                _pickupsManager.CoinCollected += OnCoinCollected;
+            }
         }
 
         public void ResetForRestart()
@@ -77,7 +70,7 @@ namespace MarioTest.UI
             _courseWinOverlay?.Show();
         }
 
-        private void Unsubscribe()
+        private void UnsubscribeHealth()
         {
             if (_playerHealth == null)
             {
@@ -86,6 +79,7 @@ namespace MarioTest.UI
 
             _playerHealth.LivesChanged -= OnLivesChanged;
             _playerHealth.Died -= OnDied;
+            _playerHealth = null;
         }
 
         private void UnsubscribePickups()
@@ -117,7 +111,6 @@ namespace MarioTest.UI
 
         private void OnLivesChanged(int livesRemaining)
         {
-            Debug.Log($"[GameHud] LivesChanged — {livesRemaining}");
             _livesHud?.SetLives(livesRemaining);
         }
 
@@ -128,7 +121,6 @@ namespace MarioTest.UI
 
         private void OnDied()
         {
-            Debug.Log($"[GameHud] OnDied — overlay={(_gameOverOverlay != null ? _gameOverOverlay.name : "null")}");
             _gameOverOverlay?.Show();
         }
 

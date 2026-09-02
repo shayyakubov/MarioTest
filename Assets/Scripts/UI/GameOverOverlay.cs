@@ -28,7 +28,6 @@ namespace MarioTest.UI
 
         public void Show()
         {
-            Debug.Log("[GameOverOverlay] Show");
             gameObject.SetActive(true);
         }
 

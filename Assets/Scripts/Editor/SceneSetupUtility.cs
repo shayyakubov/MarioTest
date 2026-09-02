@@ -814,7 +814,6 @@ namespace MarioTest.Editor
                 mobileTouchInput);
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-            Debug.Log("Lives system wired to open scene.");
         }
 
         public static EnemyManager CreateEnemyManager(PlayerController playerController)

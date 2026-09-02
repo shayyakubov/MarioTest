@@ -19,8 +19,6 @@ namespace MarioTest.Interaction
                 return;
             }
 
-            Debug.Log($"[KillZoneTrigger] OnTriggerEnter — {other.name}");
-
             if (!other.TryGetComponent(out ILifeTarget lifeTarget))
             {
                 lifeTarget = other.GetComponentInParent<ILifeTarget>();
@@ -28,7 +26,6 @@ namespace MarioTest.Interaction
 
             if (lifeTarget == null)
             {
-                Debug.Log("[KillZoneTrigger] no ILifeTarget found");
                 return;
             }
 

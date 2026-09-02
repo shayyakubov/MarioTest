@@ -41,7 +41,6 @@ namespace MarioTest.Editor
             EditorSceneManager.SaveScene(scene, ScenePath);
             PhysicsLayersSetup.ConfigurePrefabs();
             AssetDatabase.SaveAssets();
-            Debug.Log($"Enemy test scene saved to {ScenePath}");
         }
     }
 }
