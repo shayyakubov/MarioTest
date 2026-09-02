@@ -15,8 +15,7 @@ Run/jump, follow camera, moving/ice/crumble platforms, pushable crate, stomp + s
 
 
 Out
-Menus beyond game-over/win, custom art/audio, settings, saves, extra levels, tuning ScriptableObject, sudden event, feel juice, bonus features (wall jump, replay, etc.).
-
+Menus beyond game-over/win, custom art/audio, settings, saves, extra levels, tuning ScriptableObject, moving ice platform (untested yet)
 
 Movement tuning (Course scene)
 max speed 8
@@ -45,7 +44,6 @@ Ground check also stands on Pushable and Default.
 
 
 Known issues
-Moving platform can jitter when riding; (seems to be a conflict between physics updates and render updates)
 Life-loss respawn restores crumble platforms and pushables only — not stomped enemies or collected coins.
-MarioTest/Build Course Scene editor menu uses stale Assets/_Project paths; use the saved Course.unity scene.
 Phone build / device recording not included in repo yet.
+StompEnemy is a bit hard to stomp, also you get hit by a side knockback too easily
