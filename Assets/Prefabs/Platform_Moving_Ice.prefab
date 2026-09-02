@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8639585172713887383}
   - component: {fileID: 2048656123750510957}
   - component: {fileID: 3704692862237945107}
+  - component: {fileID: 9123456789012345678}
   - component: {fileID: 5283084455454261644}
   - component: {fileID: 4872355153857892071}
   m_Layer: 6
@@ -114,6 +115,33 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &9123456789012345678
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209407612999036884}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!114 &5283084455454261644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef3efafd4058c32478aadf8d843e0fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Platforms.MovingPlatformBehaviour
+  _rigidbody: {fileID: 9123456789012345678}
   _speed: 3
   _startTransform: {fileID: 0}
   _endTransform: {fileID: 0}

@@ -3,9 +3,11 @@ using UnityEngine;
 namespace MarioTest.Platforms
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(Rigidbody))]
     [DefaultExecutionOrder(-5)]
     public sealed class MovingPlatformBehaviour : MonoBehaviour, IMovingSurface
     {
+        [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private float _speed = 2f;
         [SerializeField] private Transform _startTransform;
         [SerializeField] private Transform _endTransform;
@@ -21,7 +23,16 @@ namespace MarioTest.Platforms
 
         private void Awake()
         {
-            _fallbackStartPosition = transform.position;
+            if (_rigidbody == null)
+            {
+                _rigidbody = GetComponent<Rigidbody>();
+            }
+
+            _rigidbody.isKinematic = true;
+            _rigidbody.useGravity = false;
+            _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+
+            _fallbackStartPosition = _rigidbody.position;
             _fallbackEndPosition = _fallbackStartPosition + _endOffset;
         }
 
@@ -30,7 +41,7 @@ namespace MarioTest.Platforms
             Vector3 startPosition = _startTransform != null ? _startTransform.position : _fallbackStartPosition;
             Vector3 endPosition = _endTransform != null ? _endTransform.position : _fallbackEndPosition;
 
-            Vector3 previousPosition = transform.position;
+            Vector3 previousPosition = _rigidbody.position;
             Vector3 target = _direction > 0f ? endPosition : startPosition;
             Vector3 next = Vector3.MoveTowards(previousPosition, target, _speed * Time.fixedDeltaTime);
 
@@ -40,7 +51,7 @@ namespace MarioTest.Platforms
                 _direction *= -1f;
             }
 
-            transform.position = next;
+            _rigidbody.MovePosition(next);
             _velocity = (next - previousPosition) / Time.fixedDeltaTime;
         }
     }
