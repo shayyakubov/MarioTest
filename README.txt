@@ -45,7 +45,7 @@ Ground probe also stands on Pushable and Default.
 
 
 Known issues
-Moving platform can jitter when riding; platform still moves via transform.position (kinematic MovePosition + carry not done yet).
+Moving platform can jitter when riding; (seems to be a conflict between physics updates and render updates)
 Life-loss respawn restores crumble platforms and pushables only — not stomped enemies or collected coins.
 MarioTest/Build Course Scene editor menu uses stale Assets/_Project paths; use the saved Course.unity scene.
 Phone build / device recording not included in repo yet.
