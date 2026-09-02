@@ -26,7 +26,7 @@ Do not duplicate rules across both places.
 - **Subfolder `AGENTS.md`** — lean agent context per code area: status, architecture, key decisions, links to docs. Not the full feature write-up.
 - **`docs/features/`** — fuller feature descriptions (behavior, formulas, test plans). One file per feature when non-trivial. Index: `docs/README.md`.
 - Each `AGENTS.md` must **link to `docs/features/`** when a feature doc exists; do not duplicate long-form design in `AGENTS.md`.
-- **Tuned numbers** — defaults live in code (`PlayerTuning`, etc.) and scene/prefab; feature `AGENTS.md` describes *what* to tune, not duplicate values. Final shipped numbers go in `README.md`.
+- **Tuned numbers** — defaults live in ScriptableObject assets (`PlayerTuning`, etc.) and scene/prefab refs; feature `AGENTS.md` describes *what* to tune, not duplicate values. Final shipped numbers go in `README.txt`.
 - Do not invent architecture, APIs, or folder layouts that do not exist in the repo yet.
 
 ## Deliverables (for later)

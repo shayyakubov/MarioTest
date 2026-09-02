@@ -1468,14 +1468,6 @@ PrefabInstance:
       propertyPath: _cameraTransform
       value: 
       objectReference: {fileID: 1004770245}
-    - target: {fileID: 5012498442560042680, guid: 97680475d6e0b2a4f97fea57a51e0757, type: 3}
-      propertyPath: _tuning._maxSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5012498442560042680, guid: 97680475d6e0b2a4f97fea57a51e0757, type: 3}
-      propertyPath: _tuning._coyoteTime
-      value: 0.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -19,7 +19,7 @@ Agent summary. **Detail:** [docs/features/player-movement.md](../../../../docs/f
 | `GroundDetector` | Plain C#: spherecast → `IsGrounded`, `GroundNormal` |
 | `IPlayerInput` | Portable read API (`Move`, jump) for `PlayerController` |
 | `PlayerInputReader` | Input System + touch merge; `Tick()` then read via `IPlayerInput` |
-| `PlayerTuning` / `PlayerMovementSettings` / `GroundDetectionSettings` | Tunables on controller |
+| `PlayerTuning` (ScriptableObject) / `PlayerMovementSettings` / `GroundDetectionSettings` | Tunables — SO asset + settings on controller |
 | `GameBootstrap` | Wires `Initialize(IPlayerInput)` |
 
 **Decisions agents must not violate:**
@@ -29,7 +29,7 @@ Agent summary. **Detail:** [docs/features/player-movement.md](../../../../docs/f
 - `Update` = intent; `FixedUpdate` = physics
 - Motor sets **velocity directly** (horizontal + Y for jump/gravity) — no `AddForce` for run; no hard clamp on total horizontal speed
 - Zero-friction capsule material — no wall stick; ice/surfaces tune acceleration multiplier, not friction
-- Tuning defaults in code; feature detail in `docs/features/`
+- Tuning defaults live on `Assets/ScriptableObjects/PlayerTuning.asset`; feature detail in `docs/features/`
 
 **Wiring:** `GameBootstrap` owns Input Actions + reader lifecycle. `PlayerController` uses `GetComponent` for `Rigidbody` + `CapsuleCollider`.
 

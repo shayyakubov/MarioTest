@@ -43,12 +43,12 @@ Hard problems with solutions are logged in **[DECISIONS.md](DECISIONS.md)** — 
 | PlayerInputReader | Plain class: only class that talks to Input System; implements IPlayerInput |
 | PlayerMovement | Plain class: horizontal acceleration servo |
 | GroundDetector | Plain class: one non-alloc spherecast per fixed step on Ground layer |
-| PlayerTuning | Serializable tuning data — edited on PlayerController, consumed by PlayerMovement |
+| PlayerTuning | ScriptableObject asset — referenced by PlayerController, consumed by PlayerMovement |
 | GameBootstrap | Composition root: creates reader, wires Initialize, owns input enable/disable |
 
 **Separation principle:** Controller handles intent and Unity lifecycle; PlayerMovement handles physics logic. Controller delegates movement — it does not apply forces directly.
 
-**Plain C# over MonoBehaviour:** PlayerTuning, PlayerMovement, PlayerInputReader, and GroundDetector are plain classes. PlayerController is a thin MonoBehaviour for lifecycle and scene refs.
+**Plain C# over MonoBehaviour:** PlayerMovement, PlayerInputReader, and GroundDetector are plain classes. PlayerTuning is a ScriptableObject. PlayerController is a thin MonoBehaviour for lifecycle and scene refs.
 
 **Input wiring:** GameBootstrap holds the Input Actions asset and PlayerController reference. PlayerController.Initialize receives IPlayerInput — no Input System or bootstrap knowledge. Same-GameObject Rigidbody and CapsuleCollider via GetComponent in Awake.
 
@@ -58,16 +58,16 @@ Hard problems with solutions are logged in **[DECISIONS.md](DECISIONS.md)** — 
 
 ## Tuning
 
-**Choice:** PlayerTuning is a serializable class edited directly on PlayerController in the inspector.
+**Choice:** PlayerTuning is a ScriptableObject (`Assets/ScriptableObjects/PlayerTuning.asset`) referenced by PlayerController.
 
 **Why:**
-- Standard Unity pattern for per-prefab tuning — no separate asset required
-- Tuning may eventually be overridden from remote config at runtime by building a new PlayerTuning instance
+- One shared asset for Course and prefab — numbers stay in sync
+- Assignment asks for a tuning ScriptableObject
 - PlayerMovement only reads tuning values; it does not care where they came from
 
-**Current flow:** PlayerController holds serialized tuning. On startup it passes that tuning into PlayerMovement.
+**Current flow:** PlayerController holds a reference to the PlayerTuning asset and passes it into PlayerMovement on Initialize.
 
-**Future flow (remote config):** When remote config arrives, build a new PlayerTuning from fetched values and replace what movement uses.
+**Future flow (remote config):** When remote config arrives, either mutate the asset at runtime or swap in a new ScriptableObject instance built from fetched values.
 
 ---
 

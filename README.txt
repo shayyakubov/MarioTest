@@ -15,9 +15,9 @@ Run/jump, follow camera, moving/ice/crumble platforms, pushable crate, stomp + s
 
 
 Out
-Menus beyond game-over/win, custom art/audio, settings, saves, extra levels, tuning ScriptableObject, moving ice platform (untested yet)
+Menus beyond game-over/win, custom art/audio, settings, saves, extra levels, moving ice platform (untested yet)
 
-Movement tuning (Course scene)
+Movement tuning (Assets/ScriptableObjects/PlayerTuning.asset)
 max speed 8
 max acceleration 50
 jump velocity 12.5

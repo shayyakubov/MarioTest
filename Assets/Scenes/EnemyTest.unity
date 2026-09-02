@@ -993,21 +993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6a4f3e1d0f6855a2b3c6d7e8f9a0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Player.PlayerController
-  _tuning:
-    _maxSpeed: 6
-    _maxAllowedAcceleration: 50
-    _moveInputDeadzone: 0.1
-    _riseGravity: -32
-    _fallGravity: -40
-    _maxFallSpeed: 20
-    _jumpVelocity: 14.1
-    _stompVelocity: 14.1
-    _coyoteTime: 0.2
-    _jumpBuffer: 0.12
-    _lowJumpGravity: -80
-    _knockbackDecay: 5.5
-    _maxKnockbackSpeed: 25
-    _knockbackStopSpeed: 0.1
+  _tuning: {fileID: 11400000, guid: 8f3c2a1b9e4d5670c8b2a3d4e5f60718, type: 2}
   _movementSettings:
     _groundDecelerationMultiplier: 1
     _airborneAccelerationMultiplier: 0.25

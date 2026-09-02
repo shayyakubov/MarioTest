@@ -4,7 +4,7 @@ namespace MarioTest.Editor
 {
     /// <summary>
     /// Course geometry and published jump limits for gap sizing.
-    /// Limits match PlayerTuning defaults (jumpVelocity 14.1, maxSpeed 6).
+    /// Limits match PlayerTuning asset defaults (jumpVelocity 12.5, maxSpeed 8).
     /// </summary>
     internal static class CourseLayout
     {
