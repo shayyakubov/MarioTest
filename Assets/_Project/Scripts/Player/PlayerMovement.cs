@@ -19,6 +19,7 @@ namespace MarioTest.Player
         private Collider _surfaceCollider;
         private Vector3 _knockbackVelocity;
         private Vector3 _motorHorizontalVelocity;
+        // Stomp: upward impulse queued here; hold vs hop is decided in ApplyGravity.
         private float _bounceVelocity;
 
         public PlayerMovement(PlayerTuning tuning, PlayerMovementSettings movementSettings)
@@ -50,6 +51,10 @@ namespace MarioTest.Player
             _knockbackVelocity = Vector3.ClampMagnitude(velocity, _tuning.MaxKnockbackSpeed);
         }
 
+        /// <summary>
+        /// Enemy stomp: queue upward speed only. Hold vs release height comes from
+        /// <see cref="ApplyGravity"/> (same rise/low-jump gravity as a normal jump when vy &gt; 0).
+        /// </summary>
         public void ApplyBounce()
         {
             _bounceVelocity = _tuning.StompVelocity;
@@ -85,6 +90,7 @@ namespace MarioTest.Player
 
             if (_bounceVelocity > 0f)
             {
+                // Stomp frame: impulse here, then ApplyGravity below shapes hold vs hop.
                 velocity.y = Mathf.Max(velocity.y, _bounceVelocity);
                 _bounceVelocity = 0f;
                 _jumpPressedLatched = false;
@@ -209,6 +215,8 @@ namespace MarioTest.Player
             float gravity;
             if (velocity.y > 0f)
             {
+                // Variable jump height: held = riseGravity, released = lowJumpGravity.
+                // Applies to normal jumps and stomp bounces alike (any rising arc).
                 gravity = _jumpHeld ? _tuning.RiseGravity : _tuning.LowJumpGravity;
             }
             else

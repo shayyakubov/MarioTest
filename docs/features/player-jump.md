@@ -5,7 +5,7 @@ Variable-height jump with coyote time and jump buffer. Completes assignment buil
 **Status:** Implemented  
 **Code:** `Assets/_Project/Scripts/Player/`
 
-**Variable height:** while rising, use `lowJumpGravity` when jump not held; `riseGravity` when held.
+**Variable height:** while rising, use `lowJumpGravity` when jump not held; `riseGravity` when held. **Stomp bounce** uses the same rule — see [Stomp bounce](#stomp-bounce) below.
 
 ---
 
@@ -95,6 +95,8 @@ Only set Y velocity on jump frames — horizontal stays force-based.
 
 While rising: `riseGravity` when jump held, `lowJumpGravity` when released (more negative = shorter hop).
 
+This applies to **every** upward arc where `vy > 0`, including stomp bounces — not only jumps from `TryExecuteJump`.
+
 ### `ApplyMovement` order (per fixed step)
 
 ```
@@ -105,6 +107,63 @@ While rising: `riseGravity` when jump held, `lowJumpGravity` when released (more
 ```
 
 Document exact jump-vs-gravity order when implementing (jump set before gravity on same step is typical).
+
+---
+
+## Stomp bounce
+
+**Status:** Implemented  
+**Code:** `StompableEnemy.cs` → `IBounceReceiver.ApplyBounce()` → `PlayerMovement`
+
+Assignment: land on an enemy from above → enemy dies, player bounces; **holding jump = higher bounce, release early = short hop**.
+
+### Why it looks like one feature but lives in two places
+
+Stomp does **not** call a separate “high bounce” API. It only sets an initial upward speed; **variable height is entirely gravity**, same as a normal jump.
+
+| Step | What happens |
+|------|----------------|
+| 1. Contact | `StompableEnemy` decides stomp vs side hit (fall speed, feet above enemy midline, top tolerance) |
+| 2. Stomp | `ApplyBounce()` sets pending `_bounceVelocity = StompVelocity` (tunable on `PlayerTuning`) |
+| 3. Same `FixedUpdate` | `ApplyMovement` applies bounce **before** gravity: `vy = max(vy, StompVelocity)` |
+| 4. Same `FixedUpdate` | `ApplyGravity`: if `vy > 0`, use `riseGravity` when `_jumpHeld`, else `lowJumpGravity` |
+| 5. Following frames | Player keeps holding or releases jump → arc height follows normal variable-jump rules |
+
+So “higher bounce when holding jump” is **not** a second stomp velocity — it is `ApplyGravity` cutting the arc less aggressively while the thumb stays down.
+
+```
+Stomp contact
+    → ApplyBounce()  (_bounceVelocity = StompVelocity)
+    → ApplyMovement: vy ← max(vy, StompVelocity); clear coyote/buffer/latch
+    → ApplyGravity:  vy > 0 ? (jumpHeld ? riseGravity : lowJumpGravity) : fallGravity
+    → next frames…   same gravity branch until vy ≤ 0
+```
+
+### Stomp vs jump on the bounce frame
+
+On the bounce frame, `_bounceVelocity` wins over `TryExecuteJump` — you cannot also fire a normal jump from buffer/coyote that same step. Coyote, buffer, and jump latch are cleared when bounce applies.
+
+Knockback horizontal decay still runs after gravity on that step.
+
+### Tuning (names only — values in `PlayerTuning` / prefab)
+
+| Tunable | Stomp role |
+|---------|------------|
+| `StompVelocity` | Initial upward speed after stomp (like `JumpVelocity` for a normal jump) |
+| `RiseGravity` | Held jump after stomp — gentler cut, taller arc |
+| `LowJumpGravity` | Released jump after stomp — sharp cut, short hop |
+| `FallGravity` | Once `vy ≤ 0` after bounce |
+
+`StompVelocity` and `JumpVelocity` may differ or match by design; height difference for hold vs release always comes from the gravity pair above.
+
+### Testing stomp height
+
+1. Stomp enemy while **holding** jump through the arc — should reach roughly full stomp height.
+2. Stomp and **release immediately** — clearly shorter hop off the enemy.
+3. Side graze at speed — should hit, not bounce (see `StompableEnemy` bounds checks).
+4. Full fall speed + 30 fps — stomp discrimination must still register as stomp, not side hit.
+
+Enemy-side detail: `StompableEnemy.cs` (`IsStomp`, `_minFallSpeed`, `_stompTopTolerance`).
 
 ---
 
@@ -141,6 +200,7 @@ Final numbers go in `README.md` at deliverable time.
 4. **Walk off, no jump** — no jump after coyote expires
 5. **Debug Ground** — red during coyote jump is expected
 6. **Publish** — max height and max horizontal distance at run speed (for course / README)
+7. **Stomp** — hold vs release after enemy stomp changes bounce height (same gravity as #1)
 
 ---
 
@@ -150,3 +210,5 @@ Final numbers go in `README.md` at deliverable time.
 - Slope takeoff / moving platforms
 - Knockback + jump composition
 - Tuning ScriptableObject (#8)
+
+(Stomp bounce is in scope — documented in [Stomp bounce](#stomp-bounce).)

@@ -25,6 +25,7 @@ Agent summary. **Detail:** [docs/features/player-movement.md](../../../../docs/f
 **Decisions agents must not violate:**
 
 - Coyote + buffer on **player side**, not `GroundDetector`
+- **Stomp “hold = higher bounce”** uses the same `ApplyGravity` branch as variable jump (`vy > 0` + `_jumpHeld`) — not a separate bounce API; see [docs/features/player-jump.md#stomp-bounce](../../../../docs/features/player-jump.md#stomp-bounce)
 - `Update` = intent; `FixedUpdate` = physics
 - Motor sets **velocity directly** (horizontal + Y for jump/gravity) — no `AddForce` for run; no hard clamp on total horizontal speed
 - Zero-friction capsule material — no wall stick; ice/surfaces tune acceleration multiplier, not friction
