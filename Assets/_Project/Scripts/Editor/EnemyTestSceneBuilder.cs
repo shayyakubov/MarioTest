@@ -26,8 +26,12 @@ namespace MarioTest.Editor
                 TestSceneLayout.EnemyTestPlayerSpawn);
             SceneSetupUtility.WireFollowCamera(cameraTransform, playerController.transform);
 
-            var mobileTouchInput = SceneSetupUtility.CreateMobileTouchInput();
-            SceneSetupUtility.CreateBootstrap(playerController, mobileTouchInput);
+            var mobileTouchInput = SceneSetupUtility.CreateGameHud().TouchInput;
+            SceneSetupUtility.WireLivesSystem(
+                playerController,
+                cameraTransform,
+                TestSceneLayout.EnemyTestPlayerSpawn,
+                mobileTouchInput);
             SceneSetupUtility.CreateEnemyManager(playerController);
 
             SceneSetupUtility.CreatePatrolShooterEnemy(

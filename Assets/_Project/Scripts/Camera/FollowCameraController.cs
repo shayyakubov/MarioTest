@@ -73,6 +73,21 @@ namespace MarioTest.Camera
             _worldForward.BlendTo(forward, blendTime);
         }
 
+        public void SnapToTarget()
+        {
+            if (_target == null)
+            {
+                return;
+            }
+
+            _followCamera.SnapToTarget(
+                transform,
+                _target.position,
+                GetHorizontalVelocity(),
+                _worldForward.CurrentForward,
+                _leadReferenceSpeed);
+        }
+
         private Vector3 GetHorizontalVelocity()
         {
             if (_targetRigidbody == null)

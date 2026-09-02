@@ -23,6 +23,7 @@ namespace MarioTest.Player
 
         public bool IsGrounded => _groundDetector != null && _groundDetector.IsGrounded;
         public Vector3 GroundNormal => _groundDetector != null ? _groundDetector.GroundNormal : Vector3.up;
+        public IPlayerInput Input => _input;
 
         public void ApplyKnockback(Vector3 velocity)
         {
@@ -40,6 +41,11 @@ namespace MarioTest.Player
         {
             _input = input;
             _movement = new PlayerMovement(_tuning, _movementSettings);
+        }
+
+        public void Reset()
+        {
+            _movement?.Reset();
         }
 
         private void Awake()

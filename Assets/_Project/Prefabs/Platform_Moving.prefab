@@ -126,5 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Platforms.MovingPlatformBehaviour
   _speed: 4
+  _startTransform: {fileID: 0}
+  _endTransform: {fileID: 0}
   _endOffset: {x: 4, y: 0, z: 0}
   _waypointArrivalDistance: 0.01

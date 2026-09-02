@@ -62,8 +62,12 @@ namespace MarioTest.Editor
                 TestSceneLayout.PlayerSpawn);
             SceneSetupUtility.WireFollowCamera(cameraTransform, playerController.transform);
 
-            MobileTouchInput mobileTouchInput = SceneSetupUtility.CreateMobileTouchInput();
-            SceneSetupUtility.CreateBootstrap(playerController, mobileTouchInput);
+            MobileTouchInput mobileTouchInput = SceneSetupUtility.CreateGameHud().TouchInput;
+            SceneSetupUtility.WireLivesSystem(
+                playerController,
+                cameraTransform,
+                TestSceneLayout.PlayerSpawn,
+                mobileTouchInput);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             PhysicsLayersSetup.ConfigurePrefabs();

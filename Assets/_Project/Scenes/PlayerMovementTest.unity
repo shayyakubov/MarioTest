@@ -529,7 +529,7 @@ MonoBehaviour:
     _maxFallSpeed: 20
     _jumpVelocity: 14.1
     _stompVelocity: 14.1
-    _coyoteTime: 0.12
+    _coyoteTime: 0.2
     _jumpBuffer: 0.12
     _lowJumpGravity: -80
     _knockbackDecay: 5.5

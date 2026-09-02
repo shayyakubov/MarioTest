@@ -18,6 +18,8 @@ namespace MarioTest.Input
         [SerializeField] private RectTransform _joystickHandle;
         [SerializeField] private Canvas _canvas;
 
+        private static bool _touchSupportInitialized;
+
         private PlayerInputReader _inputReader;
         private int _joystickFingerId = -1;
         private int _jumpFingerId = -1;
@@ -30,14 +32,26 @@ namespace MarioTest.Input
 
         private void OnEnable()
         {
-            EnhancedTouchSupport.Enable();
-            TouchSimulation.Enable();
+            EnsureTouchSupportEnabled();
         }
 
         private void OnDisable()
         {
-            TouchSimulation.Disable();
-            EnhancedTouchSupport.Disable();
+            _joystickFingerId = -1;
+            _jumpFingerId = -1;
+            HideJoystick();
+        }
+
+        private static void EnsureTouchSupportEnabled()
+        {
+            if (_touchSupportInitialized)
+            {
+                return;
+            }
+
+            EnhancedTouchSupport.Enable();
+            TouchSimulation.Enable();
+            _touchSupportInitialized = true;
         }
 
         private void Update()

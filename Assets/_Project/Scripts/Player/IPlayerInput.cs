@@ -7,5 +7,9 @@ namespace MarioTest.Player
         Vector2 Move { get; }
         bool JumpHeld { get; }
         bool JumpPressedThisFrame { get; }
+
+        void Enable();
+
+        void Disable();
     }
 }

@@ -14,7 +14,7 @@ namespace MarioTest.Player
         [SerializeField] private float _maxFallSpeed = 20f;
         [SerializeField] private float _jumpVelocity = 14.1f;
         [SerializeField] private float _stompVelocity = 14.1f;
-        [SerializeField] private float _coyoteTime = 0.12f;
+        [SerializeField] private float _coyoteTime = 0.2f;
         [SerializeField] private float _jumpBuffer = 0.12f;
         [SerializeField] private float _lowJumpGravity = -80f;
         [SerializeField] private float _knockbackDecay = 5.5f;
@@ -49,7 +49,7 @@ namespace MarioTest.Player
             float fallGravity = -40f,
             float maxFallSpeed = 20f,
             float jumpVelocity = 14.1f,
-            float coyoteTime = 0.12f,
+            float coyoteTime = 0.2f,
             float jumpBuffer = 0.12f,
             float lowJumpGravity = -80f)
         {

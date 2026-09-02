@@ -14,6 +14,7 @@ Agent summary. **Detail:** [docs/features/player-movement.md](../../../../docs/f
 | Component | Responsibility |
 |-----------|----------------|
 | `PlayerController` | `Update`: input. `FixedUpdate`: detect → movement |
+| `PlayerHealth` | Applies damage in `TakeHit()`; raises `Hit` / `Died` |
 | `PlayerMovement` | Plain C#: jump, gravity, horizontal |
 | `GroundDetector` | Plain C#: spherecast → `IsGrounded`, `GroundNormal` |
 | `IPlayerInput` | Portable read API (`Move`, jump) for `PlayerController` |

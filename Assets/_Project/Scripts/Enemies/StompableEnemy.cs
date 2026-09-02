@@ -10,7 +10,7 @@ namespace MarioTest.Enemies
     {
         [SerializeField] private float _sideKnockbackSpeed = 20f;
         [SerializeField] private float _minFallSpeed = 2f;
-        [SerializeField] private float _stompTopTolerance = 0.35f;
+        [SerializeField] private float _stompTopTolerance = 0.55f;
         [SerializeField] private float _contactCooldown = 0.35f;
 
         private Collider _collider;
@@ -103,7 +103,8 @@ namespace MarioTest.Enemies
                 return false;
             }
 
-            if (playerRigidbody.position.y <= enemyBounds.center.y)
+            // Feet above enemy midline — avoids side grazes without requiring player center high above enemy center.
+            if (playerBounds.min.y < enemyBounds.center.y)
             {
                 return false;
             }
@@ -124,6 +125,24 @@ namespace MarioTest.Enemies
                 return false;
             }
 
+            if (!playerRigidbody.TryGetComponent(out ILifeTarget lifeTarget))
+            {
+                lifeTarget = playerRigidbody.GetComponentInParent<ILifeTarget>();
+            }
+
+            if (lifeTarget == null)
+            {
+                return false;
+            }
+
+            TryApplySideKnockback(collision, playerRigidbody);
+            Debug.Log("[StompableEnemy] side hit — calling TakeHit");
+            lifeTarget.TakeHit();
+            return true;
+        }
+
+        private void TryApplySideKnockback(Collision collision, Rigidbody playerRigidbody)
+        {
             if (!playerRigidbody.TryGetComponent(out IKnockbackReceiver knockbackReceiver))
             {
                 knockbackReceiver = playerRigidbody.GetComponentInParent<IKnockbackReceiver>();
@@ -131,7 +150,7 @@ namespace MarioTest.Enemies
 
             if (knockbackReceiver == null)
             {
-                return false;
+                return;
             }
 
             Vector3 knockback = playerRigidbody.position - transform.position;
@@ -145,11 +164,10 @@ namespace MarioTest.Enemies
 
             if (knockback.sqrMagnitude < GameplayEpsilon.VelocitySqr)
             {
-                return false;
+                return;
             }
 
             knockbackReceiver.ApplyKnockback(knockback.normalized * _sideKnockbackSpeed);
-            return true;
         }
     }
 }

@@ -54,3 +54,4 @@ crashlytics-auto-export.properties
 # Addressables / Visual Scripting generated
 **/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 **/[Aa]ssets/[Uu]nity[Vv]isual[Ss]cripting/generated/
+course-build.log

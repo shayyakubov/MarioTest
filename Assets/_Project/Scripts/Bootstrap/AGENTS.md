@@ -4,23 +4,27 @@ Agent summary. Input/player wiring is covered in [docs/features/player-movement.
 
 ## Status
 
-In use for input composition.
+Composition root for input and session startup.
 
 ## GameBootstrap
 
-Composition root for scene-level wiring. `Update` merges input (`Tick`) after `MobileTouchInput` (-50), before `PlayerController` (0).
+Runs at `-10`. `Update` merges input (`Tick`) after `MobileTouchInput` (-50), before `PlayerController` (0).
 
 **Responsibilities:**
-- Hold `InputActionAsset` reference (only bootstrap knows about Input System asset)
-- Create `PlayerInputReader` and pass to `PlayerController.Initialize(IPlayerInput)`
+- Hold scene references and inject them at startup
+- Create `PlayerInputReader` → `PlayerController.Initialize` + `MobileTouchInput.Initialize`
+- Resolve player components and inject into `GameSession.Initialize`
 - Enable / disable input actions in `OnEnable` / `OnDisable`
 
-**Inspector wiring (minimal):**
+**Inspector wiring:**
 - `_inputActions` — PlayerInputActions asset
 - `_playerController` — player in scene
-
-`PlayerController` has no knowledge of bootstrap or Input System. Same-GameObject deps (`Rigidbody`) use `GetComponent` in `Awake`.
+- `_mobileTouchInput` — touch canvas (optional)
+- `_gameSession` — run coordinator in scene
+- `_gameHud` — lives + overlays
+- `_followCamera` — main follow camera
+- `_goalTrigger` — course goal volume
 
 ## Future
 
-Extend bootstrap for remote config fetch, game state. Touch UI wired via `MobileTouchInput` → `PlayerInputReader`.
+Extend bootstrap for remote config fetch. Touch UI wired via `MobileTouchInput` → `PlayerInputReader`.

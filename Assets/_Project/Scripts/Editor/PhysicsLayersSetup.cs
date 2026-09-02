@@ -21,6 +21,7 @@ namespace MarioTest.Editor
             "Assets/_Project/Prefabs/Platform_Moving_Ice.prefab", PhysicsLayers.Ground,
             "Assets/_Project/Prefabs/Platform_Ice.prefab", PhysicsLayers.Ground,
             "Assets/_Project/Prefabs/Platform_Crumble.prefab", PhysicsLayers.Ground,
+            "Assets/_Project/Prefabs/StompableEnemy.prefab", PhysicsLayers.Enemy,
         };
 
         [MenuItem("MarioTest/Apply Physics Layers")]

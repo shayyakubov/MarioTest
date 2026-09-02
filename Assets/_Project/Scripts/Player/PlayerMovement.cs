@@ -55,6 +55,22 @@ namespace MarioTest.Player
             _bounceVelocity = _tuning.StompVelocity;
         }
 
+        public void Reset()
+        {
+            _moveDirection = Vector3.zero;
+            _inputMagnitude = 0f;
+            _jumpHeld = false;
+            _jumpPressedLatched = false;
+            _coyoteTimeRemaining = 0f;
+            _jumpBufferRemaining = 0f;
+            _wasGrounded = false;
+            _surfaceVelocity = Vector3.zero;
+            _surfaceCollider = null;
+            _knockbackVelocity = Vector3.zero;
+            _motorHorizontalVelocity = Vector3.zero;
+            _bounceVelocity = 0f;
+        }
+
         public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded, Collider groundCollider)
         {
             if (!isGrounded)
@@ -62,7 +78,7 @@ namespace MarioTest.Player
                 rigidbody.WakeUp();
             }
 
-            UpdateSurfaceVelocity(isGrounded, groundCollider);
+            UpdateSurfaceTracking(rigidbody, isGrounded, groundCollider);
             ApplyHorizontalMovement(rigidbody, fixedDeltaTime, isGrounded, groundCollider);
 
             Vector3 velocity = rigidbody.linearVelocity;
@@ -89,24 +105,40 @@ namespace MarioTest.Player
             _wasGrounded = isGrounded;
         }
 
-        private void UpdateSurfaceVelocity(bool isGrounded, Collider groundCollider)
+        private void UpdateSurfaceTracking(Rigidbody rigidbody, bool isGrounded, Collider groundCollider)
         {
-            if (!isGrounded)
+            if (!isGrounded || groundCollider == null)
             {
                 _surfaceCollider = null;
+                _surfaceVelocity = Vector3.zero;
                 return;
             }
 
-            if (groundCollider != _surfaceCollider)
+            bool onMovingSurface = TryGetSurfaceHorizontal(groundCollider, out Vector3 surfaceHorizontal);
+            if (!onMovingSurface)
             {
-                _surfaceCollider = groundCollider;
-                _surfaceVelocity = Vector3.zero;
+                surfaceHorizontal = Vector3.zero;
             }
 
-            if (TryGetSurfaceHorizontal(groundCollider, out Vector3 surfaceHorizontal))
+            bool isSameSurface = groundCollider == _surfaceCollider;
+
+            if (onMovingSurface && isSameSurface)
             {
-                _surfaceVelocity = surfaceHorizontal;
+                Vector3 delta = surfaceHorizontal - _surfaceVelocity;
+                if (delta.sqrMagnitude > GameplayEpsilon.VelocitySqr)
+                {
+                    Vector3 velocity = rigidbody.linearVelocity;
+                    velocity.x += delta.x;
+                    velocity.z += delta.z;
+                    rigidbody.linearVelocity = velocity;
+
+                    _motorHorizontalVelocity.x += delta.x;
+                    _motorHorizontalVelocity.z += delta.z;
+                }
             }
+
+            _surfaceCollider = groundCollider;
+            _surfaceVelocity = surfaceHorizontal;
         }
 
         private static bool TryGetSurfaceHorizontal(Collider groundCollider, out Vector3 surfaceHorizontal)
@@ -155,8 +187,11 @@ namespace MarioTest.Player
             {
                 _coyoteTimeRemaining = _tuning.CoyoteTime;
             }
+            else if (_coyoteTimeRemaining > 0f)
+            {
+                _coyoteTimeRemaining = Mathf.Max(_coyoteTimeRemaining - fixedDeltaTime, 0f);
+            }
 
-            _coyoteTimeRemaining = Mathf.Max(_coyoteTimeRemaining - fixedDeltaTime, 0f);
             _jumpBufferRemaining = Mathf.Max(_jumpBufferRemaining - fixedDeltaTime, 0f);
         }
 

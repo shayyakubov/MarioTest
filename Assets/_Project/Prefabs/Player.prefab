@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1620412511192905935}
   - component: {fileID: 5522466854148702873}
   - component: {fileID: 5012498442560042680}
+  - component: {fileID: 8011905405075658744}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -164,7 +165,7 @@ MonoBehaviour:
     _maxFallSpeed: 20
     _jumpVelocity: 12.5
     _stompVelocity: 14.1
-    _coyoteTime: 0.12
+    _coyoteTime: 0.2
     _jumpBuffer: 0.12
     _lowJumpGravity: -80
     _knockbackDecay: 5.5
@@ -183,3 +184,16 @@ MonoBehaviour:
     _maxFootprintRadiusScale: 0.35
   _cameraTransform: {fileID: 0}
   _debugGround: 0
+--- !u!114 &8011905405075658744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995710386167667476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15fc7361dc63474694412ad6ca2754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Player.PlayerHealth
+  _startingLives: 3

@@ -1,3 +1,4 @@
+using MarioTest.Core;
 using UnityEngine;
 
 namespace MarioTest.Platforms
@@ -5,7 +6,7 @@ namespace MarioTest.Platforms
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(CrumblePlatformVisual))]
-    public sealed class CrumblePlatformBehaviour : MonoBehaviour
+    public sealed class CrumblePlatformBehaviour : MonoBehaviour, IWorldRestorable
     {
         [SerializeField] private float _standDuration = 0.5f;
         [SerializeField] private float _warnDuration = 0.25f;
