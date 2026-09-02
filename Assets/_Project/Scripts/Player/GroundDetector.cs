@@ -1,3 +1,4 @@
+using MarioTest.Core;
 using UnityEngine;
 
 namespace MarioTest.Player
@@ -29,7 +30,7 @@ namespace MarioTest.Player
                 cast.Direction,
                 _hits,
                 cast.Distance,
-                Physics.DefaultRaycastLayers,
+                PhysicsLayers.GroundProbeMask,
                 QueryTriggerInteraction.Ignore);
 
             if (hitCount > 0 && IsValidGroundHit(_hits[0], cast))

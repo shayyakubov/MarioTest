@@ -5,8 +5,9 @@ namespace MarioTest.Player
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class PlayerController : MonoBehaviour, IKnockbackReceiver
+    public class PlayerController : MonoBehaviour, IKnockbackReceiver, IBounceReceiver
     {
+        private const float DebugGroundProbeLength = 2f;
         [SerializeField] private PlayerTuning _tuning;
         [SerializeField] private PlayerMovementSettings _movementSettings = new();
         [SerializeField] private GroundDetectionSettings _groundDetection = new();
@@ -26,6 +27,12 @@ namespace MarioTest.Player
         public void ApplyKnockback(Vector3 velocity)
         {
             _movement?.ApplyKnockback(velocity);
+            _rigidbody?.WakeUp();
+        }
+
+        public void ApplyBounce()
+        {
+            _movement?.ApplyBounce();
             _rigidbody?.WakeUp();
         }
 
@@ -79,13 +86,13 @@ namespace MarioTest.Player
 
             Color color = _groundDetector.IsGrounded ? Color.green : Color.red;
             Vector3 origin = _rigidbody.position;
-            Debug.DrawLine(origin, origin + Vector3.down * 2f, color, Time.fixedDeltaTime, false);
+            Debug.DrawLine(origin, origin + Vector3.down * DebugGroundProbeLength, color, Time.fixedDeltaTime, false);
             Debug.DrawRay(origin, _groundDetector.GroundNormal, Color.blue, Time.fixedDeltaTime, false);
         }
 
         private Vector3 GetCameraRelativeDirection(Vector2 input)
         {
-            if (input.sqrMagnitude < 0.0001f)
+            if (input.sqrMagnitude < GameplayEpsilon.VelocitySqr)
             {
                 return Vector3.zero;
             }

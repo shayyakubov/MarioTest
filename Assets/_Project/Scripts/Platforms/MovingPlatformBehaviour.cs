@@ -7,10 +7,13 @@ namespace MarioTest.Platforms
     public sealed class MovingPlatformBehaviour : MonoBehaviour, IMovingSurface
     {
         [SerializeField] private float _speed = 2f;
+        [SerializeField] private Transform _startTransform;
+        [SerializeField] private Transform _endTransform;
         [SerializeField] private Vector3 _endOffset = new Vector3(4f, 0f, 0f);
+        [SerializeField] private float _waypointArrivalDistance = 0.01f;
 
-        private Vector3 _startPosition;
-        private Vector3 _endPosition;
+        private Vector3 _fallbackStartPosition;
+        private Vector3 _fallbackEndPosition;
         private Vector3 _velocity;
         private float _direction = 1f;
 
@@ -18,17 +21,21 @@ namespace MarioTest.Platforms
 
         private void Awake()
         {
-            _startPosition = transform.position;
-            _endPosition = _startPosition + _endOffset;
+            _fallbackStartPosition = transform.position;
+            _fallbackEndPosition = _fallbackStartPosition + _endOffset;
         }
 
         private void FixedUpdate()
         {
+            Vector3 startPosition = _startTransform != null ? _startTransform.position : _fallbackStartPosition;
+            Vector3 endPosition = _endTransform != null ? _endTransform.position : _fallbackEndPosition;
+
             Vector3 previousPosition = transform.position;
-            Vector3 target = _direction > 0f ? _endPosition : _startPosition;
+            Vector3 target = _direction > 0f ? endPosition : startPosition;
             Vector3 next = Vector3.MoveTowards(previousPosition, target, _speed * Time.fixedDeltaTime);
 
-            if ((next - target).sqrMagnitude < 0.0001f)
+            float arrivalDistanceSqr = _waypointArrivalDistance * _waypointArrivalDistance;
+            if ((next - target).sqrMagnitude < arrivalDistanceSqr)
             {
                 _direction *= -1f;
             }

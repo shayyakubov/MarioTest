@@ -1,19 +1,37 @@
 ---
-description: Collision hygiene requirements from the assignment brief
+description: Collision requirements from NumTalk assignment PDF (Must: Collision)
 globs: Assets/_Project/**/*.cs
 alwaysApply: false
 ---
 
 # Collision & Layers
 
-## Assignment constraints (not yet designed)
+From assignment PDF **Must: Collision** — these are not optional for submission.
 
-- Use layer collision matrix — not tag comparisons inside `OnTriggerEnter`
-- Projectiles must not tunnel; must not hit shooter or other projectiles
-- Crate must not clip through geometry or push player through walls
-- Stomp vs side-hit discrimination must hold at full fall speed and 30 fps
-- Knockback does not cost a life; falls and side hits do
+## Push (crate)
 
-## When design is established
+- At least one landing platform blocked by a crate; walking into it moves it
+- Real physical object: mass, friction; shove off edge; push onto ice and keep going; stand on it and jump from it
+- Must never clip inside walls/floor; must never push the player through geometry
+- If using CharacterController, document how pushing works (it does not come for free)
 
-Document the layer layout and collision approach in the relevant folder `AGENTS.md` and in `README.md`. Do not invent layers or collision code until then.
+## Get shot
+
+- At least one enemy fires a projectile
+- Hit does **not** cost a life — knockback impulse absorbed and decayed without losing control
+- Must compose with: airborne, ice, moving platform, leaning on crate
+- Knocked off a ledge is a legitimate death
+
+## Collision hygiene
+
+- Projectiles must not tunnel through platforms or player at full speed
+- Projectiles must not hit the firing enemy or other projectiles
+- Implement via **layer collision matrix** + appropriate collision detection mode
+- **Not** via tag comparisons inside `OnTriggerEnter`
+- Document layer layout in **README**
+
+## Stomp vs hit (related)
+
+- Stomp from above: enemy dies, player bounces (holding jump = higher bounce)
+- Side or below contact: player takes the hit (costs a life)
+- Discrimination must hold at full falling speed and 30 fps

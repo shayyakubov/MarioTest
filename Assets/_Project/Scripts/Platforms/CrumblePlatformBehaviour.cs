@@ -10,6 +10,8 @@ namespace MarioTest.Platforms
         [SerializeField] private float _standDuration = 0.5f;
         [SerializeField] private float _warnDuration = 0.25f;
         [SerializeField] private float _occupancyVerticalTolerance = 0.2f;
+        [SerializeField] private float _occupancyBoxVerticalPadding = 0.25f;
+        [SerializeField] private float _occupancyBoxHorizontalScale = 0.85f;
 
         private Collider _collider;
         private CrumblePlatformVisual _visual;
@@ -54,14 +56,13 @@ namespace MarioTest.Platforms
             }
 
             Bounds bounds = _collider.bounds;
-            const float verticalPadding = 0.25f;
             Vector3 halfExtents = new Vector3(
-                bounds.extents.x * 0.85f,
-                verticalPadding,
-                bounds.extents.z * 0.85f);
+                bounds.extents.x * _occupancyBoxHorizontalScale,
+                _occupancyBoxVerticalPadding,
+                bounds.extents.z * _occupancyBoxHorizontalScale);
             Vector3 center = new Vector3(
                 bounds.center.x,
-                bounds.max.y + verticalPadding,
+                bounds.max.y + _occupancyBoxVerticalPadding,
                 bounds.center.z);
 
             int count = Physics.OverlapBoxNonAlloc(

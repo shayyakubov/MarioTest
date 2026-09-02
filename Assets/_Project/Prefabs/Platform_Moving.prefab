@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7512101586700110818}
   - component: {fileID: 2741074247581803384}
   - component: {fileID: 3817870293986698795}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Platform_Moving
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,3 +127,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Platforms.MovingPlatformBehaviour
   _speed: 4
   _endOffset: {x: 4, y: 0, z: 0}
+  _waypointArrivalDistance: 0.01

@@ -1,32 +1,84 @@
 ---
-description: NumTalk assignment context, priorities, and cut order
+description: NumTalk assignment context, priorities, and cut order (from assignment PDF)
 alwaysApply: true
 ---
 
 # NumTalk 3D Platformer — Project Context
 
-This is an 8-hour mobile touch platformer prototype (Mario lineage, not a clone). Primitives only. Unity 6 + New Input System + URP.
+Self-contained mobile touch 3D platformer prototype (Mario lineage, not a clone). ~8-hour timebox. Built-in primitives only. Unity 6.x (6.3 LTS preferred) + New Input System + URP.
 
-## Build order (do not reorder)
+**Source of truth:** NumTalk Unity Developer Assignment PDF.
+
+## Core loop (given, in order)
+
+1. **RUN · PUSH** — camera-relative move with real accel/decel; walking into something moves it
+2. **JUMP** — variable height; coyote + buffer on the player's side
+3. **LAND / STOMP** — platforms answer back (move, ice, crumble); stomp enemy from above
+4. **ADVANCE** — camera makes the next gap legible before commit
+- **SHOT** — projectile knockback; does **not** cost a life
+- **MISS OR HIT** — fall or side enemy hit → lose 1 of 3 lives → respawn at checkpoint
+- **CHAIN** — reach the flag
+
+## Build order (do not reorder; do not cut collision block)
 
 1. **Movement** — camera-relative run, variable jump, coyote + buffer (named tunables)
 2. **Touch input** — floating left stick, right tap jump, both thumbs simultaneous
-3. **Camera** — third-person follow, damping, lead, no fight mid-jump
-4. **Platforms** — composable Moving / Ice / Crumble on one platform type
-5. **Collision block** — pushable crate, shooter knockback, layer matrix hygiene
-6. **Fail/checkpoint** — 3 lives, respawn, world state restore, game over
-7. **Course** — 60–120s, gaps within published max jump height/distance
+3. **Camera** — third-person follow, damping, lead, no fight mid-jump, player stays on-screen at commit
+4. **Platforms** — composable Moving / Ice / Crumble on **one** platform type (not three forked prefabs)
+5. **Collision block** — pushable crate, shooter knockback, collision hygiene (layer matrix)
+6. **Fail/checkpoint** — 3 lives, respawn, world state restore, game over at 0 lives (including third restart)
+7. **Course** — one scene, 60–120s played well, goal flag; gaps within published max jump height/distance
 8. **Should** — tuning ScriptableObject, one sudden event, feel juice
-9. **Bonus** — only if above is solid; cut bonus → feel → sudden event → course length
+9. **Bonus** — only if above is solid
+
+**Cut order if time runs out:** bonus → feel → sudden event → course length. **Do not cut the collision block.**
+
+## Must build
+
+- **Run** — floating virtual stick (left region); camera-relative accel/decel; both thumbs at once
+- **Jump** — right-region tap; variable height (release early = hop); coyote + buffer as named tunables; document settled numbers
+- **Camera** — third-person follow, damping, lead; no fight mid-jump; player not off-screen or behind geometry at commit
+- **Land and stomp** — stomp from above: enemy dies, player bounces (holding jump = higher bounce); side/below = hit; must hold at full fall speed and 30 fps
+- **Platforms** — Moving (ride + sensible jump-off velocity), Ice (low friction, momentum carries), Crumble (falls shortly after stood on); composable on one platform type
+- **Fail and checkpoint** — fall or hit costs 1 life; respawn at last checkpoint with coherent world restore (document what you restore and what you don't); 0 lives = clean run end/restart
+- **Course** — one authored course ending at goal; publish max jump height and max jump distance; every gap clears with margin
+- **Frame-rate independence** — same feel at 30/60/120 fps; terminal-velocity fall must not tunnel through platforms; document how
+- **Phone build** — Android APK, TestFlight, or device screen recording (two thumbs, not keyboard)
+
+## Must: Collision (submission opens here first)
+
+- **Push** — at least one landing blocked by a crate; real physical object (mass, friction); shove off edge, onto ice, stand and jump from it; never inside walls/floor; never push player through geometry
+- **Get shot** — enemy fires projectile; hit does not cost a life; knockback impulse absorbed and decayed without losing control; composes with airborne, ice, moving platform, crate; knocked off ledge can kill
+- **Collision hygiene** — projectiles: no tunneling, no friendly fire on shooter, no projectile-on-projectile; use **layer collision matrix** + collision detection mode, **not** tag checks in `OnTriggerEnter`; **layer layout in README**
+
+## Should (if core is solid)
+
+- One telegraphed sudden event mid-run (freeze, crumble-ahead, waking shooter, etc.)
+- One tuning ScriptableObject (move, accel, jump, gravity, coyote, buffer, ice, crumble, crate mass, knockback + decay)
+- Feel juice (squash/stretch, landing read, coin pop, stomp bounce, readable knockback)
+
+## Bonus (only if above is genuinely done)
+
+- Camera occlusion (pull in or fade blocking geometry)
+- One original move (wall jump, ground pound, dash, double jump)
+- Deterministic replay + "replay last run"
+- Zero per-frame GC in movement loop; pooled projectiles/enemies/pickups + Profiler screenshot
 
 ## Hard constraints
 
-- No third-party platformer controllers or asset-store movement kits
-- No Nintendo assets, names, music, or level layouts
-- Collision via **layer matrix**, not tag checks in `OnTriggerEnter`
+- No third-party / asset-store platformer controllers or movement kits
+- No Nintendo assets, characters, names, music, or level layouts
+- Input System preferred over legacy Input
+- One playable scene; readable git history (not a single initial commit)
 - Frame-rate independent; no tunneling at 30/60/120 fps
-- One scene, readable git history, DECISIONS.md with AI disclosure
+
+## Out of scope
+
+Menus beyond start + game-over overlay · art/models/textures/shaders · audio · saves/leaderboards/analytics/ads · localisation · settings screen · more than one course · test coverage beyond what helped you build · polished UI (coin counter + three life pips with default components is enough)
 
 ## Deliverables
 
-README (version, run steps, tuned numbers, layer layout) + DECISIONS.md (3 hardest calls + AI note) + APK/recording.
+- **Repository** — link or zip
+- **Build** — APK, TestFlight, or device recording under 90 seconds
+- **README** (one page) — Unity version, how to run, in/out, known issues, tuned movement numbers, **layer layout**
+- **DECISIONS.md** (one page) — three hardest calls + trade-offs each; where you'd take the controller next; AI note (share of generated vs rewritten code, one thing assistant got wrong + how caught, one rejected suggestion + why)

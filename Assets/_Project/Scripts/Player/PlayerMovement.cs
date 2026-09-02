@@ -1,3 +1,4 @@
+using MarioTest.Core;
 using MarioTest.Platforms;
 using UnityEngine;
 
@@ -17,6 +18,8 @@ namespace MarioTest.Player
         private Vector3 _surfaceVelocity;
         private Collider _surfaceCollider;
         private Vector3 _knockbackVelocity;
+        private Vector3 _motorHorizontalVelocity;
+        private float _bounceVelocity;
 
         public PlayerMovement(PlayerTuning tuning, PlayerMovementSettings movementSettings)
         {
@@ -44,7 +47,12 @@ namespace MarioTest.Player
         public void ApplyKnockback(Vector3 velocity)
         {
             velocity.y = 0f;
-            _knockbackVelocity += velocity;
+            _knockbackVelocity = Vector3.ClampMagnitude(velocity, _tuning.MaxKnockbackSpeed);
+        }
+
+        public void ApplyBounce()
+        {
+            _bounceVelocity = _tuning.StompVelocity;
         }
 
         public void ApplyMovement(Rigidbody rigidbody, float fixedDeltaTime, bool isGrounded, Collider groundCollider)
@@ -58,7 +66,20 @@ namespace MarioTest.Player
             ApplyHorizontalMovement(rigidbody, fixedDeltaTime, isGrounded, groundCollider);
 
             Vector3 velocity = rigidbody.linearVelocity;
-            TryExecuteJump(ref velocity.y, isGrounded, fixedDeltaTime);
+
+            if (_bounceVelocity > 0f)
+            {
+                velocity.y = Mathf.Max(velocity.y, _bounceVelocity);
+                _bounceVelocity = 0f;
+                _jumpPressedLatched = false;
+                _jumpBufferRemaining = 0f;
+                _coyoteTimeRemaining = 0f;
+            }
+            else
+            {
+                velocity.y = TryExecuteJump(velocity.y, isGrounded, fixedDeltaTime);
+            }
+
             rigidbody.linearVelocity = velocity;
 
             ApplyGravity(rigidbody, fixedDeltaTime, isGrounded);
@@ -107,25 +128,25 @@ namespace MarioTest.Player
             return false;
         }
 
-        private void TryExecuteJump(ref float verticalVelocity, bool isGrounded, float fixedDeltaTime)
+        private float TryExecuteJump(float verticalVelocity, bool isGrounded, float fixedDeltaTime)
         {
             UpdateJumpTimers(verticalVelocity, isGrounded, fixedDeltaTime);
 
             bool jumpRequested = _jumpPressedLatched || _jumpBufferRemaining > 0f;
             if (!jumpRequested)
             {
-                return;
+                return verticalVelocity;
             }
 
             bool canJump = isGrounded || (_coyoteTimeRemaining > 0f && verticalVelocity <= 0f);
             if (!canJump)
             {
-                return;
+                return verticalVelocity;
             }
 
             _coyoteTimeRemaining = 0f;
             _jumpBufferRemaining = 0f;
-            verticalVelocity = _tuning.JumpVelocity;
+            return _tuning.JumpVelocity;
         }
 
         private void UpdateJumpTimers(float verticalVelocity, bool isGrounded, float fixedDeltaTime)
@@ -166,7 +187,9 @@ namespace MarioTest.Player
             // Ledge/corner contact can zero vy while our ground probe says airborne — keep falling.
             if (velocity.y <= 0f)
             {
-                velocity.y = Mathf.Min(velocity.y, -_tuning.MaxFallSpeed * 0.2f);
+                velocity.y = Mathf.Min(
+                    velocity.y,
+                    -_tuning.MaxFallSpeed * _movementSettings.MinAirborneFallSpeedFraction);
             }
 
             rigidbody.linearVelocity = velocity;
@@ -178,7 +201,7 @@ namespace MarioTest.Player
             bool isGrounded,
             Collider groundCollider)
         {
-            if (_inputMagnitude > _tuning.MoveInputDeadzone || _surfaceVelocity.sqrMagnitude > 0.0001f)
+            if (_inputMagnitude > _tuning.MoveInputDeadzone || _surfaceVelocity.sqrMagnitude > GameplayEpsilon.VelocitySqr)
             {
                 rigidbody.WakeUp();
             }
@@ -192,29 +215,34 @@ namespace MarioTest.Player
             }
 
             Vector3 velocity = rigidbody.linearVelocity;
-            Vector3 horizontalVelocity = new Vector3(velocity.x, 0f, velocity.z);
+            Vector3 knockback = new Vector3(_knockbackVelocity.x, 0f, _knockbackVelocity.z);
             Vector3 targetVelocity = _moveDirection * (_tuning.MaxSpeed * _inputMagnitude) + _surfaceVelocity;
 
-            bool isDecelerating = horizontalVelocity.sqrMagnitude > targetVelocity.sqrMagnitude + 0.0001f;
+            bool isDecelerating = _motorHorizontalVelocity.sqrMagnitude > targetVelocity.sqrMagnitude + GameplayEpsilon.VelocitySqr;
             float movementMultiplier = ResolveMovementMultiplier(
                 isGrounded,
                 isDecelerating,
                 accelerationMultiplier);
 
             float maxDelta = _tuning.MaxAllowedAcceleration * movementMultiplier * fixedDeltaTime;
-            Vector3 newHorizontalVelocity = Vector3.MoveTowards(horizontalVelocity, targetVelocity, maxDelta);
+            _motorHorizontalVelocity = Vector3.MoveTowards(_motorHorizontalVelocity, targetVelocity, maxDelta);
 
-            velocity.x = newHorizontalVelocity.x + _knockbackVelocity.x;
-            velocity.z = newHorizontalVelocity.z + _knockbackVelocity.z;
+            velocity.x = _motorHorizontalVelocity.x + knockback.x;
+            velocity.z = _motorHorizontalVelocity.z + knockback.z;
             rigidbody.linearVelocity = velocity;
         }
 
+        // Exponential decay: knockback drops as a fraction of what's left, so one decay
+        // value stays punchy across different hit strengths. Linear MoveTowards would
+        // also work — raise MaxKnockbackSpeed and set decay ≈ speed / desired stop time.
         private void DecayKnockback(float fixedDeltaTime)
         {
-            _knockbackVelocity = Vector3.MoveTowards(
-                _knockbackVelocity,
-                Vector3.zero,
-                _tuning.KnockbackDecay * fixedDeltaTime);
+            _knockbackVelocity *= Mathf.Exp(-_tuning.KnockbackDecay * fixedDeltaTime);
+
+            if (_knockbackVelocity.sqrMagnitude < _tuning.KnockbackStopSpeedSqr)
+            {
+                _knockbackVelocity = Vector3.zero;
+            }
         }
 
         private float ResolveMovementMultiplier(

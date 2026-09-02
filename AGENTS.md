@@ -6,7 +6,7 @@ Context for AI agents working in this repo. Read this file first.
 
 NumTalk Unity Developer assignment: a self-contained **mobile touch 3D platformer** prototype (Mario lineage, not a clone). One playable scene, ~8-hour timebox, primitives only.
 
-Full brief requirements live in `.cursor/rules/project-context.mdc`. Assignment constraints are fixed; **implementation is not** — do not assume design choices that have not been made yet.
+Full brief requirements live in `.cursor/rules/project-context.mdc` (distilled from the NumTalk assignment PDF). Assignment constraints are fixed; **implementation is not** — do not assume design choices that have not been made yet.
 
 ## Where things live
 
@@ -31,8 +31,8 @@ Do not duplicate rules across both places.
 
 ## Deliverables (for later)
 
-- `README.md` — version, how to run, tuned numbers, layer layout
-- `DECISIONS.md` — hard problems log (root cause + solution); top three + AI disclosure for submission
+- `README.md` — version, how to run, in/out, known issues, tuned movement numbers, layer layout
+- `DECISIONS.md` — three hardest calls + trade-offs; where next; AI note (generated vs rewritten, one assistant mistake, one rejected suggestion)
 - `DESIGN_NOTES.md` — working architecture notes to pull from when writing deliverables
 
 These are written as features ship, not upfront.

@@ -13,6 +13,7 @@ alwaysApply: false
 - Public members: PascalCase
 - Private fields: `_camelCase`
 - SerializeField: `[SerializeField] private` — never public fields
+- Literal defaults on `[SerializeField]` fields are fine (tuning lives in the Inspector, not a shared constants class)
 - Locals / params: camelCase
 - Constants: PascalCase
 - Booleans: `is` / `has` / `can` prefix

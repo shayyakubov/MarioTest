@@ -1,30 +1,48 @@
+using MarioTest.Core;
 using UnityEngine;
 
 namespace MarioTest.Enemies
 {
     [DisallowMultipleComponent]
-    public sealed class PatrolShooterEnemy : MonoBehaviour
+    public sealed class PatrolShooterEnemy : MonoBehaviour, IEnemy
     {
         [SerializeField] private Transform _patrolPointA;
         [SerializeField] private Transform _patrolPointB;
-        [SerializeField] private Transform _player;
         [SerializeField] private EnemyProjectile _projectilePrefab;
         [SerializeField] private Transform _muzzle;
         [SerializeField] private float _patrolSpeed = 2f;
         [SerializeField] private float _shootRange = 12f;
-        [SerializeField] private float _fireInterval = 1.5f;
+        [SerializeField] private float _fireInterval = 3f;
+        [SerializeField] private float _maxShootElevationAngle = 20f;
+        [SerializeField] private int _predictionIterations = 3;
+        [SerializeField] private float _patrolArrivalDistance = 0.1f;
+        [SerializeField] private float _fallbackMuzzleHeight = 0.3f;
 
         private Transform _patrolTarget;
+        private Transform _targetTransform;
+        private Rigidbody _rigidbody;
+        private Rigidbody _targetRigidbody;
         private float _fireCooldown;
+
+        public void Initialize(Transform targetTransform, Rigidbody targetRigidbody)
+        {
+            _targetTransform = targetTransform;
+            _targetRigidbody = targetRigidbody;
+            _patrolTarget = _patrolPointA;
+        }
 
         private void Awake()
         {
-            _patrolTarget = _patrolPointA;
+            _rigidbody = GetComponent<Rigidbody>();
+        }
+
+        private void FixedUpdate()
+        {
+            Patrol();
         }
 
         private void Update()
         {
-            Patrol();
             TryShoot();
         }
 
@@ -40,12 +58,23 @@ namespace MarioTest.Enemies
                 _patrolTarget = _patrolPointA;
             }
 
-            transform.position = Vector3.MoveTowards(
-                transform.position,
+            Vector3 previousPosition = _rigidbody.position;
+            Vector3 nextPosition = Vector3.MoveTowards(
+                previousPosition,
                 _patrolTarget.position,
-                _patrolSpeed * Time.deltaTime);
+                _patrolSpeed * Time.fixedDeltaTime);
 
-            if ((transform.position - _patrolTarget.position).sqrMagnitude < 0.01f)
+            _rigidbody.MovePosition(nextPosition);
+
+            Vector3 moveDelta = nextPosition - previousPosition;
+            moveDelta.y = 0f;
+            if (moveDelta.sqrMagnitude > GameplayEpsilon.VelocitySqr)
+            {
+                transform.rotation = Quaternion.LookRotation(moveDelta);
+            }
+
+            float arrivalDistanceSqr = _patrolArrivalDistance * _patrolArrivalDistance;
+            if ((nextPosition - _patrolTarget.position).sqrMagnitude < arrivalDistanceSqr)
             {
                 _patrolTarget = _patrolTarget == _patrolPointA ? _patrolPointB : _patrolPointA;
             }
@@ -53,12 +82,12 @@ namespace MarioTest.Enemies
 
         private void TryShoot()
         {
-            if (_player == null || _projectilePrefab == null)
+            if (_targetTransform == null || _projectilePrefab == null)
             {
                 return;
             }
 
-            Vector3 toPlayer = _player.position - transform.position;
+            Vector3 toPlayer = _targetTransform.position - transform.position;
             toPlayer.y = 0f;
 
             if (toPlayer.sqrMagnitude > _shootRange * _shootRange)
@@ -72,20 +101,66 @@ namespace MarioTest.Enemies
                 return;
             }
 
-            Fire(toPlayer);
+            Vector3 shotOrigin = GetShotOrigin();
+            if (!IsWithinShootElevation(shotOrigin, _targetTransform.position))
+            {
+                return;
+            }
+
+            transform.rotation = Quaternion.LookRotation(toPlayer.normalized);
+            Fire();
             _fireCooldown = _fireInterval;
         }
 
-        private void Fire(Vector3 direction)
+        private void Fire()
         {
-            if (direction.sqrMagnitude < 0.0001f)
+            Vector3 origin = GetShotOrigin();
+            Vector3 targetVelocity = _targetRigidbody != null ? _targetRigidbody.linearVelocity : Vector3.zero;
+            Vector3 predictedTarget = ProjectilePrediction.PredictPosition(
+                origin,
+                _targetTransform.position,
+                targetVelocity,
+                _projectilePrefab.Speed,
+                _predictionIterations);
+            predictedTarget = ClampShotTarget(origin, predictedTarget);
+
+            EnemyProjectile projectile = Instantiate(_projectilePrefab, origin, Quaternion.identity);
+            projectile.LaunchAt(predictedTarget);
+        }
+
+        private Vector3 GetShotOrigin()
+        {
+            return _muzzle != null
+                ? _muzzle.position
+                : transform.position + Vector3.up * _fallbackMuzzleHeight;
+        }
+
+        private bool IsWithinShootElevation(Vector3 origin, Vector3 targetPosition)
+        {
+            Vector3 delta = targetPosition - origin;
+            float horizontalDistance = new Vector3(delta.x, 0f, delta.z).magnitude;
+            if (horizontalDistance < GameplayEpsilon.MinSpeed)
             {
-                direction = transform.forward;
+                return delta.y <= 0f;
             }
 
-            Vector3 origin = _muzzle != null ? _muzzle.position : transform.position;
-            EnemyProjectile projectile = Instantiate(_projectilePrefab, origin, Quaternion.identity);
-            projectile.Launch(direction);
+            float elevationDegrees = Mathf.Atan2(delta.y, horizontalDistance) * Mathf.Rad2Deg;
+            return elevationDegrees <= _maxShootElevationAngle;
+        }
+
+        private Vector3 ClampShotTarget(Vector3 origin, Vector3 targetPosition)
+        {
+            Vector3 delta = targetPosition - origin;
+            float horizontalDistance = new Vector3(delta.x, 0f, delta.z).magnitude;
+            if (horizontalDistance < GameplayEpsilon.MinSpeed)
+            {
+                delta.y = Mathf.Min(delta.y, 0f);
+                return origin + delta;
+            }
+
+            float maxRise = horizontalDistance * Mathf.Tan(_maxShootElevationAngle * Mathf.Deg2Rad);
+            delta.y = Mathf.Min(delta.y, maxRise);
+            return origin + delta;
         }
 
         private void OnDrawGizmosSelected()

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4020222904715756646}
   - component: {fileID: 7315472228920991579}
   - component: {fileID: 5990240316835573282}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Platform_Ice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 6}
-  m_LocalScale: {x: 5, y: 0.5, z: 5}
+  m_LocalScale: {x: 20, y: 1, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -50,7 +50,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2649327195832193502}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 382707c62b4d419e8def5a5b0e1d93c6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
