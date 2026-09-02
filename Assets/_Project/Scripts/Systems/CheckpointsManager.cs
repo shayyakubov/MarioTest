@@ -1,3 +1,4 @@
+using MarioTest.Interaction;
 using UnityEngine;
 
 namespace MarioTest.Systems
@@ -5,23 +6,20 @@ namespace MarioTest.Systems
     public sealed class CheckpointsManager : MonoBehaviour
     {
         [SerializeField] private Transform _defaultCheckpoint;
-        [SerializeField] private Transform _playerFallback;
+
+        [SerializeField] private CheckpointTrigger[] _checkpointTriggers = System.Array.Empty<CheckpointTrigger>();
 
         private Transform _activeCheckpoint;
 
         private void Start()
         {
-            _activeCheckpoint = _defaultCheckpoint != null ? _defaultCheckpoint : _playerFallback;
+            _activeCheckpoint = _defaultCheckpoint;
+            SubscribeToTriggers();
         }
 
-        public void SetCheckpoint(Transform checkpoint)
+        private void OnDestroy()
         {
-            if (checkpoint == null)
-            {
-                return;
-            }
-
-            _activeCheckpoint = checkpoint;
+            UnsubscribeFromTriggers();
         }
 
         public Transform GetSpawnPoint()
@@ -31,7 +29,41 @@ namespace MarioTest.Systems
                 return _activeCheckpoint;
             }
 
-            return _playerFallback;
+            return _defaultCheckpoint;
+        }
+
+        private void SubscribeToTriggers()
+        {
+            for (int i = 0; i < _checkpointTriggers.Length; i++)
+            {
+                CheckpointTrigger trigger = _checkpointTriggers[i];
+                if (trigger != null)
+                {
+                    trigger.Activated += OnCheckpointActivated;
+                }
+            }
+        }
+
+        private void UnsubscribeFromTriggers()
+        {
+            for (int i = 0; i < _checkpointTriggers.Length; i++)
+            {
+                CheckpointTrigger trigger = _checkpointTriggers[i];
+                if (trigger != null)
+                {
+                    trigger.Activated -= OnCheckpointActivated;
+                }
+            }
+        }
+
+        private void OnCheckpointActivated(CheckpointTrigger trigger)
+        {
+            if (trigger == null)
+            {
+                return;
+            }
+
+            _activeCheckpoint = trigger.SpawnPoint;
         }
     }
 }

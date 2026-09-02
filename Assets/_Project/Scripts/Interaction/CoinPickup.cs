@@ -1,5 +1,5 @@
+using System;
 using MarioTest.Core;
-using MarioTest.UI;
 using UnityEngine;
 
 namespace MarioTest.Interaction
@@ -8,6 +8,8 @@ namespace MarioTest.Interaction
     [RequireComponent(typeof(Collider))]
     public sealed class CoinPickup : MonoBehaviour
     {
+        public event Action<CoinPickup> Collected;
+
         private void Reset()
         {
             Collider collider = GetComponent<Collider>();
@@ -21,9 +23,7 @@ namespace MarioTest.Interaction
                 return;
             }
 
-            CoinsHud coinsHud = Object.FindAnyObjectByType<CoinsHud>();
-            coinsHud?.AddCoin();
-            Destroy(gameObject);
+            Collected?.Invoke(this);
         }
     }
 }

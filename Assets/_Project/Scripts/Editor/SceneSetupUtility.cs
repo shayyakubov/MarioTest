@@ -134,6 +134,9 @@ namespace MarioTest.Editor
             if (includeCoins)
             {
                 coinsHud = CreateCoinsHud(canvas);
+                SerializedObject gameHudSerialized = new SerializedObject(gameHud);
+                gameHudSerialized.FindProperty("_coinsHud").objectReferenceValue = coinsHud;
+                gameHudSerialized.ApplyModifiedPropertiesWithoutUndo();
             }
 
             if (includeCourseWin)
@@ -191,11 +194,45 @@ namespace MarioTest.Editor
             SerializedObject bootstrapSerialized = new SerializedObject(bootstrap);
             bootstrapSerialized.FindProperty("_inputActions").objectReferenceValue = inputActions;
             bootstrapSerialized.FindProperty("_playerController").objectReferenceValue = playerController;
+            AssignBootstrapSessionRefs(bootstrapSerialized, playerController, gameSession);
             bootstrapSerialized.FindProperty("_mobileTouchInput").objectReferenceValue = mobileTouchInput;
             bootstrapSerialized.FindProperty("_gameSession").objectReferenceValue = gameSession;
             bootstrapSerialized.FindProperty("_gameHud").objectReferenceValue = gameHud;
             bootstrapSerialized.FindProperty("_followCamera").objectReferenceValue = followCamera;
             bootstrapSerialized.FindProperty("_goalTrigger").objectReferenceValue = goalTrigger;
+            bootstrapSerialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignBootstrapSessionRefs(
+            SerializedObject bootstrapSerialized,
+            PlayerController playerController,
+            GameSession gameSession)
+        {
+            bootstrapSerialized.FindProperty("_playerHealth").objectReferenceValue =
+                playerController.GetComponent<PlayerHealth>();
+            bootstrapSerialized.FindProperty("_playerRigidbody").objectReferenceValue =
+                playerController.GetComponent<Rigidbody>();
+
+            CheckpointsManager checkpointsManager = gameSession != null
+                ? gameSession.GetComponent<CheckpointsManager>()
+                : null;
+            if (checkpointsManager == null)
+            {
+                checkpointsManager = Object.FindAnyObjectByType<CheckpointsManager>();
+            }
+
+            bootstrapSerialized.FindProperty("_checkpointsManager").objectReferenceValue = checkpointsManager;
+        }
+
+        public static void WireBootstrapPickupsManager(GameBootstrap bootstrap, PickupsManager pickupsManager)
+        {
+            if (bootstrap == null)
+            {
+                return;
+            }
+
+            SerializedObject bootstrapSerialized = new SerializedObject(bootstrap);
+            bootstrapSerialized.FindProperty("_pickupsManager").objectReferenceValue = pickupsManager;
             bootstrapSerialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -252,6 +289,7 @@ namespace MarioTest.Editor
         {
             SerializedObject bootstrapSerialized = new SerializedObject(bootstrap);
             bootstrapSerialized.FindProperty("_playerController").objectReferenceValue = playerController;
+            AssignBootstrapSessionRefs(bootstrapSerialized, playerController, gameSession);
             bootstrapSerialized.FindProperty("_mobileTouchInput").objectReferenceValue = mobileTouchInput;
             bootstrapSerialized.FindProperty("_gameSession").objectReferenceValue = gameSession;
             bootstrapSerialized.FindProperty("_gameHud").objectReferenceValue = gameHud;
@@ -530,7 +568,7 @@ namespace MarioTest.Editor
             return enemyObject != null ? enemyObject.GetComponent<StompableEnemy>() : null;
         }
 
-        public static void CreateCoin(Vector3 position, Transform parent = null)
+        public static CoinPickup CreateCoin(Vector3 position, Transform parent = null)
         {
             GameObject coinObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             coinObject.name = "Coin";
@@ -544,7 +582,42 @@ namespace MarioTest.Editor
             Renderer renderer = coinObject.GetComponent<Renderer>();
             renderer.material.color = new Color(0.95f, 0.85f, 0.15f);
 
-            coinObject.AddComponent<CoinPickup>();
+            return coinObject.AddComponent<CoinPickup>();
+        }
+
+        public static PickupsManager EnsurePickupsManager()
+        {
+            PickupsManager manager = Object.FindAnyObjectByType<PickupsManager>();
+            if (manager == null)
+            {
+                GameObject managerObject = new GameObject("PickupsManager");
+                manager = managerObject.AddComponent<PickupsManager>();
+            }
+
+            return manager;
+        }
+
+        public static void RegisterCoinPickup(PickupsManager manager, CoinPickup pickup)
+        {
+            if (manager == null || pickup == null)
+            {
+                return;
+            }
+
+            SerializedObject managerSerialized = new SerializedObject(manager);
+            SerializedProperty pickups = managerSerialized.FindProperty("_coinPickups");
+
+            for (int i = 0; i < pickups.arraySize; i++)
+            {
+                if (pickups.GetArrayElementAtIndex(i).objectReferenceValue == pickup)
+                {
+                    return;
+                }
+            }
+
+            pickups.InsertArrayElementAtIndex(pickups.arraySize);
+            pickups.GetArrayElementAtIndex(pickups.arraySize - 1).objectReferenceValue = pickup;
+            managerSerialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         public static GoalTrigger CreateGoalFlag(Vector3 platformTopPosition, Transform parent = null)
@@ -617,6 +690,29 @@ namespace MarioTest.Editor
             }
 
             return trigger;
+        }
+
+        public static void RegisterCheckpointTrigger(CheckpointsManager manager, CheckpointTrigger trigger)
+        {
+            if (manager == null || trigger == null)
+            {
+                return;
+            }
+
+            SerializedObject managerSerialized = new SerializedObject(manager);
+            SerializedProperty triggers = managerSerialized.FindProperty("_checkpointTriggers");
+
+            for (int i = 0; i < triggers.arraySize; i++)
+            {
+                if (triggers.GetArrayElementAtIndex(i).objectReferenceValue == trigger)
+                {
+                    return;
+                }
+            }
+
+            triggers.InsertArrayElementAtIndex(triggers.arraySize);
+            triggers.GetArrayElementAtIndex(triggers.arraySize - 1).objectReferenceValue = trigger;
+            managerSerialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         public static void WireLivesSystem(

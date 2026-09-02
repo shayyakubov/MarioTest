@@ -9,10 +9,12 @@
 | Type | Role |
 |------|------|
 | `GameSession` | Run coordinator; refs injected by `GameBootstrap`; respawn, scene reload, course win |
-| `CheckpointsManager` | Active checkpoint + spawn point lookup |
+| `CheckpointsManager` | Active checkpoint + spawn lookup; subscribes to serialized `CheckpointTrigger` list |
+| `PickupsManager` | Subscribes to serialized `CoinPickup` list; fires `CoinCollected` on collect |
 | `PlayerRespawn` | Plain C#: `IWorldRestorable` reset (crumble + pushables) + teleport/camera snap |
 | `PlayerHealth` | Applies damage in `TakeHit()`; `Hit` / `Died` events (on player) |
-| `CheckpointTrigger` | Volume → `CheckpointsManager.SetCheckpoint()`; lives under scene `Checkpoints` GO |
+| `CheckpointTrigger` | Volume fires `Activated`; spawn point on trigger or `_checkpointTransform` |
+| `CoinPickup` | Trigger fires `Collected` when player enters |
 | `GoalTrigger` | Volume → `CourseReached` event (no session/UI refs) |
 | `KillZoneTrigger` | Death plane / pit trigger → `ILifeTarget.TakeHit()` |
 

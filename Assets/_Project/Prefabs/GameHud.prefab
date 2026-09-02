@@ -57,6 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.UI.GameHud
   _livesHud: {fileID: 1174189381144032482}
+  _coinsHud: {fileID: 6828394056172839405}
   _gameOverOverlay: {fileID: 4580432901978502265}
   _courseWinOverlay: {fileID: 7728394056172839405}
 --- !u!223 &6086486287706829976
@@ -451,6 +452,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7635715784172326277, guid: f7c5d98a1f62db142ba6c55cb04b9cd9, type: 3}
   m_PrefabInstance: {fileID: 7020703205847886521}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6828394056172839405 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 653606397282905318, guid: f7c5d98a1f62db142ba6c55cb04b9cd9, type: 3}
+  m_PrefabInstance: {fileID: 7020703205847886521}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee756bfa056b18648b0bac3de5d85eab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.UI.CoinsHud
 --- !u!1001 &7846113758914437667
 PrefabInstance:
   m_ObjectHideFlags: 0

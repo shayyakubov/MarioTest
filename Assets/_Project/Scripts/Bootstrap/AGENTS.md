@@ -19,8 +19,12 @@ Runs at `-10`. `Update` merges input (`Tick`) after `MobileTouchInput` (-50), be
 **Inspector wiring:**
 - `_inputActions` — PlayerInputActions asset
 - `_playerController` — player in scene
+- `_playerHealth` — on player
+- `_playerRigidbody` — on player
 - `_mobileTouchInput` — touch canvas (optional)
 - `_gameSession` — run coordinator in scene
+- `_checkpointsManager` — checkpoint system in scene
+- `_pickupsManager` — coin pickup coordinator in scene
 - `_gameHud` — lives + overlays
 - `_followCamera` — main follow camera
 - `_goalTrigger` — course goal volume

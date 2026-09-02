@@ -17,6 +17,7 @@ namespace MarioTest.Systems
         private PlayerHealth _playerHealth;
         private Rigidbody _playerRigidbody;
         private CheckpointsManager _checkpointsManager;
+        private PickupsManager _pickupsManager;
         private FollowCameraController _followCamera;
         private GameHud _gameHud;
         private GoalTrigger _goalTrigger;
@@ -28,6 +29,7 @@ namespace MarioTest.Systems
             PlayerHealth playerHealth,
             Rigidbody playerRigidbody,
             CheckpointsManager checkpointsManager,
+            PickupsManager pickupsManager,
             FollowCameraController followCamera,
             GameHud gameHud,
             GoalTrigger goalTrigger)
@@ -46,6 +48,7 @@ namespace MarioTest.Systems
             _playerHealth = playerHealth;
             _playerRigidbody = playerRigidbody;
             _checkpointsManager = checkpointsManager;
+            _pickupsManager = pickupsManager;
             _followCamera = followCamera;
             _gameHud = gameHud;
             _goalTrigger = goalTrigger;
@@ -73,6 +76,7 @@ namespace MarioTest.Systems
             _playerHealth.Hit += OnHit;
             _playerHealth.Died += OnDied;
             _gameHud?.Subscribe(_playerHealth);
+            _gameHud?.SubscribePickups(_pickupsManager);
 
             if (_gameHud != null)
             {

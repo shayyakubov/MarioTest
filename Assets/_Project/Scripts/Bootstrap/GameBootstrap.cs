@@ -14,8 +14,12 @@ namespace MarioTest.Bootstrap
     {
         [SerializeField] private InputActionAsset _inputActions;
         [SerializeField] private PlayerController _playerController;
+        [SerializeField] private PlayerHealth _playerHealth;
+        [SerializeField] private Rigidbody _playerRigidbody;
         [SerializeField] private MobileTouchInput _mobileTouchInput;
         [SerializeField] private GameSession _gameSession;
+        [SerializeField] private CheckpointsManager _checkpointsManager;
+        [SerializeField] private PickupsManager _pickupsManager;
         [SerializeField] private GameHud _gameHud;
         [SerializeField] private FollowCameraController _followCamera;
         [SerializeField] private GoalTrigger _goalTrigger;
@@ -38,25 +42,20 @@ namespace MarioTest.Bootstrap
 
         private void InitializeGameSession()
         {
-            if (_gameSession == null || _playerController == null)
-            {
-                return;
-            }
-
-            PlayerHealth playerHealth = _playerController.GetComponent<PlayerHealth>();
-            Rigidbody playerRigidbody = _playerController.GetComponent<Rigidbody>();
-            CheckpointsManager checkpointsManager = _gameSession.GetComponent<CheckpointsManager>();
-
-            if (playerHealth == null || playerRigidbody == null)
+            if (_gameSession == null
+                || _playerController == null
+                || _playerHealth == null
+                || _playerRigidbody == null)
             {
                 return;
             }
 
             _gameSession.Initialize(
                 _playerController,
-                playerHealth,
-                playerRigidbody,
-                checkpointsManager,
+                _playerHealth,
+                _playerRigidbody,
+                _checkpointsManager,
+                _pickupsManager,
                 _followCamera,
                 _gameHud,
                 _goalTrigger);

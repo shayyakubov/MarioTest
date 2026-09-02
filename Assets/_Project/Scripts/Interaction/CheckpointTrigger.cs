@@ -1,5 +1,5 @@
+using System;
 using MarioTest.Core;
-using MarioTest.Systems;
 using UnityEngine;
 
 namespace MarioTest.Interaction
@@ -10,12 +10,9 @@ namespace MarioTest.Interaction
     {
         [SerializeField] private Transform _checkpointTransform;
 
-        private CheckpointsManager _checkpointsManager;
+        public event Action<CheckpointTrigger> Activated;
 
-        private void Awake()
-        {
-            _checkpointsManager = Object.FindAnyObjectByType<CheckpointsManager>();
-        }
+        public Transform SpawnPoint => _checkpointTransform != null ? _checkpointTransform : transform;
 
         private void Reset()
         {
@@ -25,18 +22,12 @@ namespace MarioTest.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_checkpointsManager == null || other.attachedRigidbody == null)
+            if (other.attachedRigidbody == null || other.gameObject.layer != PhysicsLayers.PlayerLayer)
             {
                 return;
             }
 
-            if (other.gameObject.layer != PhysicsLayers.PlayerLayer)
-            {
-                return;
-            }
-
-            Transform checkpoint = _checkpointTransform != null ? _checkpointTransform : transform;
-            _checkpointsManager.SetCheckpoint(checkpoint);
+            Activated?.Invoke(this);
         }
     }
 }

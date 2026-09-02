@@ -41,6 +41,8 @@ namespace MarioTest.Editor
                 CourseLayout.PlayerSpawn,
                 gameHud.TouchInput);
 
+            WirePickups(courseRoot.transform);
+
             SceneSetupUtility.CreateEnemyManager(playerController);
             BuildEnemies(courseRoot.transform);
             WireGoalTrigger();
@@ -96,8 +98,6 @@ namespace MarioTest.Editor
             CreatePlatform(parent, "ShooterArena", 99f, 8f, 8f);
             CreatePlatform(parent, "GoalApproach", 108f, 5f, 5f);
             CreatePlatform(parent, "GoalPad", 115f, 6f, 6f);
-
-            CreateCoins(parent);
         }
 
         private static void BuildEnemies(Transform parent)
@@ -125,17 +125,34 @@ namespace MarioTest.Editor
                 return;
             }
 
+            CheckpointsManager checkpointsManager = gameSession.GetComponent<CheckpointsManager>();
+            if (checkpointsManager == null)
+            {
+                return;
+            }
+
             Transform checkpointsRoot = SceneSetupUtility.GetOrCreateCheckpointsRoot();
             Transform midMarker = SceneSetupUtility.CreateCheckpointMarker(
                 "Checkpoint_Mid",
                 new Vector3(0f, 0.5f, 89f),
                 checkpointsRoot);
 
-            SceneSetupUtility.CreateCheckpointTrigger(
+            CheckpointTrigger midTrigger = SceneSetupUtility.CreateCheckpointTrigger(
                 new Vector3(0f, 1f, 89f),
                 new Vector3(6f, 3f, 6f),
                 midMarker,
                 checkpointsRoot);
+
+            SceneSetupUtility.RegisterCheckpointTrigger(checkpointsManager, midTrigger);
+        }
+
+        private static void WirePickups(Transform parent)
+        {
+            PickupsManager pickupsManager = SceneSetupUtility.EnsurePickupsManager();
+            CreateCoins(parent, pickupsManager);
+
+            GameBootstrap bootstrap = Object.FindAnyObjectByType<GameBootstrap>();
+            SceneSetupUtility.WireBootstrapPickupsManager(bootstrap, pickupsManager);
         }
 
         private static void CreatePlatform(Transform parent, string name, float centerZ, float width, float depth)
@@ -185,7 +202,7 @@ namespace MarioTest.Editor
             instance.transform.localScale = scale;
         }
 
-        private static void CreateCoins(Transform parent)
+        private static void CreateCoins(Transform parent, PickupsManager pickupsManager)
         {
             float coinHeight = 1.2f;
             Vector3[] coinPositions =
@@ -202,7 +219,8 @@ namespace MarioTest.Editor
 
             for (int i = 0; i < coinPositions.Length; i++)
             {
-                SceneSetupUtility.CreateCoin(coinPositions[i], parent);
+                CoinPickup pickup = SceneSetupUtility.CreateCoin(coinPositions[i], parent);
+                SceneSetupUtility.RegisterCoinPickup(pickupsManager, pickup);
             }
         }
     }

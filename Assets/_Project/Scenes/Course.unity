@@ -263,6 +263,92 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
   m_PrefabInstance: {fileID: 151354528}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &220725414
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1085847298}
+    m_Modifications:
+    - target: {fileID: 2966589892426600179, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_Name
+      value: MovingBridge (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _speed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _endOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _endOffset.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _endTransform
+      value: 
+      objectReference: {fileID: 1556152869}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _startTransform
+      value: 
+      objectReference: {fileID: 846732372}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 118.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+--- !u!4 &220725415 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+  m_PrefabInstance: {fileID: 220725414}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &248680823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -297,7 +383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 115
+      value: 161.2
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalRotation.w
@@ -539,11 +625,19 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.9
+      value: 5.93641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -551,7 +645,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 75.1
+      value: 42.81852
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -559,7 +653,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -567,7 +661,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -694,6 +788,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 503144368}
+  - component: {fileID: 503144369}
+  - component: {fileID: 503144370}
   m_Layer: 0
   m_Name: Checkpoint_Mid
   m_TagString: Untagged
@@ -710,12 +806,46 @@ Transform:
   m_GameObject: {fileID: 503144367}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 89}
+  m_LocalPosition: {x: -0.2, y: 0.5, z: 34.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 813168370}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &503144369
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503144367}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7, y: 3, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &503144370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503144367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0b2c4a067825364685face8f5a39d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CheckpointTrigger
+  _checkpointTransform: {fileID: 503144368}
 --- !u!1001 &512623866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -799,6 +929,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 523058192}
+  - component: {fileID: 523058194}
+  - component: {fileID: 523058193}
   m_Layer: 0
   m_Name: Checkpoint_Spawn
   m_TagString: Untagged
@@ -815,11 +947,102 @@ Transform:
   m_GameObject: {fileID: 523058191}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.54, z: -3}
+  m_LocalPosition: {x: -0.16, y: 3, z: -3.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 813168370}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &523058193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523058191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0b2c4a067825364685face8f5a39d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CheckpointTrigger
+  _checkpointTransform: {fileID: 523058192}
+--- !u!65 &523058194
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523058191}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 1, z: 5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &546342913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 546342915}
+  - component: {fileID: 546342914}
+  m_Layer: 0
+  m_Name: PickupsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &546342914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546342913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff8b09767c3e7249bd0bd4044789b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Systems.PickupsManager
+  _coinPickups:
+  - {fileID: 1473537578}
+  - {fileID: 620205456}
+  - {fileID: 1344581305}
+  - {fileID: 1004055372}
+  - {fileID: 1218371937}
+  - {fileID: 1188453932}
+--- !u!4 &546342915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546342913}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.03641, y: -0, z: 32.28148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1473537576}
+  - {fileID: 620205454}
+  - {fileID: 1344581303}
+  - {fileID: 1004055370}
+  - {fileID: 372027268}
+  - {fileID: 1188453930}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &547924085
 GameObject:
@@ -858,11 +1081,19 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.39
+      value: 3.64641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -870,7 +1101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.56
+      value: -16.721478
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -878,7 +1109,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -886,7 +1117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -914,6 +1145,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
   m_PrefabInstance: {fileID: 620205453}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &620205456 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 620205453}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
 --- !u!1001 &680793144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -927,12 +1169,24 @@ PrefabInstance:
       value: MovingBridge
       objectReference: {fileID: 0}
     - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: _endOffset.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: _endOffset.z
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _endTransform
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817870293986698795, guid: 54140008eb96d62438b8514e307ee364, type: 3}
+      propertyPath: _startTransform
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalPosition.x
@@ -952,15 +1206,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6894911413984190972, guid: 54140008eb96d62438b8514e307ee364, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1193,6 +1447,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6a4f3e1d0f6855a2b3c6d7e8f9a0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Player.PlayerController
+--- !u!114 &712352933 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8011905405075658744, guid: 97680475d6e0b2a4f97fea57a51e0757, type: 3}
+  m_PrefabInstance: {fileID: 712352929}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15fc7361dc63474694412ad6ca2754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Player.PlayerHealth
 --- !u!1001 &713736132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1426,7 +1691,6 @@ GameObject:
   m_Component:
   - component: {fileID: 726697131}
   - component: {fileID: 726697130}
-  - component: {fileID: 726697129}
   m_Layer: 0
   m_Name: GameSession
   m_TagString: Untagged
@@ -1434,20 +1698,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &726697129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726697127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af27b58d757a2254fa1615f584425377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Systems.CheckpointsManager
-  _defaultCheckpoint: {fileID: 523058192}
-  _playerFallback: {fileID: 712352931}
 --- !u!114 &726697130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1561,8 +1811,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 813168370}
+  - component: {fileID: 813168371}
   m_Layer: 0
-  m_Name: Checkpoints
+  m_Name: CheckpointManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1586,6 +1837,23 @@ Transform:
   - {fileID: 921392986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &813168371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813168369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af27b58d757a2254fa1615f584425377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Systems.CheckpointsManager
+  _defaultCheckpoint: {fileID: 523058192}
+  _checkpointTriggers:
+  - {fileID: 523058193}
+  - {fileID: 503144370}
+  - {fileID: 921392987}
 --- !u!1 &818717949
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,6 +2012,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &846732371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 846732372}
+  m_Layer: 0
+  m_Name: start
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &846732372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846732371}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.06, y: 0.09, z: 118.44}
+  m_LocalScale: {x: 3, y: 0.5, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1085847298}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &921392985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1789,7 +2088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b2c4a067825364685face8f5a39d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CheckpointTrigger
-  _checkpointTransform: {fileID: 503144368}
+  _checkpointTransform: {fileID: 921392986}
 --- !u!65 &921392988
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1817,11 +2116,19 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.9
+      value: 5.93641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1829,7 +2136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 62.5
+      value: 30.218521
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1837,7 +2144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1845,7 +2152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1873,6 +2180,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
   m_PrefabInstance: {fileID: 1004055369}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1004055372 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 1004055369}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
 --- !u!1 &1004770244
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,17 +2310,59 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1085847297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1085847298}
+  m_Layer: 0
+  m_Name: FinalBridge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1085847298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085847297}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -2.33}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1556152869}
+  - {fileID: 846732372}
+  - {fileID: 220725415}
+  m_Father: {fileID: 1569099269}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1188453929
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.9
+      value: 5.93641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2010,7 +2370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 75.1
+      value: 42.81852
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2018,7 +2378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2026,7 +2386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2054,17 +2414,47 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
   m_PrefabInstance: {fileID: 1188453929}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1188453932 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 1188453929}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
+--- !u!114 &1218371937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 372027267}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
 --- !u!1001 &1344581302
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.88
+      value: 5.91641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2072,7 +2462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.24
+      value: -8.041479
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2080,7 +2470,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2088,7 +2478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2116,6 +2506,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
   m_PrefabInstance: {fileID: 1344581302}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1344581305 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 1344581302}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
 --- !u!1 &1388919611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2468,11 +2869,19 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1569099269}
+    m_TransformParent: {fileID: 546342915}
     m_Modifications:
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.40000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 5.03641
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2480,7 +2889,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8
+      value: -24.281479
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2488,7 +2897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2496,7 +2905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2524,6 +2933,48 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 304744390609238240, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
   m_PrefabInstance: {fileID: 1473537575}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1473537578 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4971653154204876819, guid: 1f683c5f87e01094799144d8873b73ba, type: 3}
+  m_PrefabInstance: {fileID: 1473537575}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26aa10e338858794aa74939a4a193d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Interaction.CoinPickup
+--- !u!1 &1556152868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1556152869}
+  m_Layer: 0
+  m_Name: end
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1556152869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556152868}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 151.22}
+  m_LocalScale: {x: 3, y: 0.5, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1085847298}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1563161655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2634,6 +3085,7 @@ Transform:
   - {fileID: 1411351699}
   - {fileID: 332020091}
   - {fileID: 680793145}
+  - {fileID: 1085847298}
   - {fileID: 1470100881}
   - {fileID: 512623867}
   - {fileID: 2065725774}
@@ -2644,12 +3096,6 @@ Transform:
   - {fileID: 714785837}
   - {fileID: 151354529}
   - {fileID: 248680824}
-  - {fileID: 1473537576}
-  - {fileID: 620205454}
-  - {fileID: 1344581303}
-  - {fileID: 1004055370}
-  - {fileID: 372027268}
-  - {fileID: 1188453930}
   - {fileID: 1963966993}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2774,8 +3220,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MarioTest.Bootstrap.GameBootstrap
   _inputActions: {fileID: -944628639613478452, guid: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d, type: 3}
   _playerController: {fileID: 712352932}
+  _playerHealth: {fileID: 712352933}
+  _playerRigidbody: {fileID: 712352930}
   _mobileTouchInput: {fileID: 711519270}
   _gameSession: {fileID: 726697130}
+  _checkpointsManager: {fileID: 813168371}
+  _pickupsManager: {fileID: 546342914}
   _gameHud: {fileID: 711519269}
   _followCamera: {fileID: 1004770246}
   _goalTrigger: {fileID: 1388919613}
@@ -2959,7 +3409,7 @@ Transform:
   m_GameObject: {fileID: 1963966992}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 115}
+  m_LocalPosition: {x: 0, y: 0, z: 161.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3115,6 +3565,7 @@ SceneRoots:
   - {fileID: 711519268}
   - {fileID: 725418539}
   - {fileID: 813168370}
+  - {fileID: 546342915}
   - {fileID: 726697131}
   - {fileID: 1681564544}
   - {fileID: 272493646}

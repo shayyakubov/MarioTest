@@ -83,7 +83,6 @@ namespace MarioTest.Player
                 rigidbody.WakeUp();
             }
 
-            UpdateSurfaceTracking(rigidbody, isGrounded, groundCollider);
             ApplyHorizontalMovement(rigidbody, fixedDeltaTime, isGrounded, groundCollider);
 
             Vector3 velocity = rigidbody.linearVelocity;
@@ -111,12 +110,17 @@ namespace MarioTest.Player
             _wasGrounded = isGrounded;
         }
 
+        /// <summary>
+        /// Tracks horizontal velocity from the ground collider (e.g. moving platforms).
+        /// When still on the same surface and its speed changes, applies the delta to the
+        /// Rigidbody and run-speed state so the player picks up acceleration without waiting
+        /// for the next target-velocity step.
+        /// While airborne, keeps the last <see cref="_surfaceVelocity"/> until grounded again.
+        /// </summary>
         private void UpdateSurfaceTracking(Rigidbody rigidbody, bool isGrounded, Collider groundCollider)
         {
             if (!isGrounded || groundCollider == null)
             {
-                _surfaceCollider = null;
-                _surfaceVelocity = Vector3.zero;
                 return;
             }
 
@@ -149,21 +153,20 @@ namespace MarioTest.Player
 
         private static bool TryGetSurfaceHorizontal(Collider groundCollider, out Vector3 surfaceHorizontal)
         {
-            if (groundCollider.TryGetComponent(out IMovingSurface movingSurface))
+            if (!groundCollider.TryGetComponent(out IMovingSurface movingSurface))
             {
-                surfaceHorizontal = new Vector3(movingSurface.Velocity.x, 0f, movingSurface.Velocity.z);
-                return true;
+                movingSurface = groundCollider.GetComponentInParent<IMovingSurface>();
             }
 
-            movingSurface = groundCollider.GetComponentInParent<IMovingSurface>();
-            if (movingSurface != null)
+            if (movingSurface == null)
             {
-                surfaceHorizontal = new Vector3(movingSurface.Velocity.x, 0f, movingSurface.Velocity.z);
-                return true;
+                surfaceHorizontal = Vector3.zero;
+                return false;
             }
 
-            surfaceHorizontal = Vector3.zero;
-            return false;
+            Vector3 velocity = movingSurface.Velocity;
+            surfaceHorizontal = new Vector3(velocity.x, 0f, velocity.z);
+            return true;
         }
 
         private float TryExecuteJump(float verticalVelocity, bool isGrounded, float fixedDeltaTime)
@@ -244,6 +247,9 @@ namespace MarioTest.Player
             bool isGrounded,
             Collider groundCollider)
         {
+
+            UpdateSurfaceTracking(rigidbody, isGrounded, groundCollider);
+
             if (_inputMagnitude > _tuning.MoveInputDeadzone || _surfaceVelocity.sqrMagnitude > GameplayEpsilon.VelocitySqr)
             {
                 rigidbody.WakeUp();
